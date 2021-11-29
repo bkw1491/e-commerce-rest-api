@@ -7,13 +7,12 @@
     "strict": true,
     "moduleResolution": "node",
     "esModuleInterop": true, 
-
     "baseUrl": "./",                      
     "paths": {
-      "@config/*": ["routes/*"],
-      "@controllers/*": ["routes/*"],
-      "@middlewares/*": ["routes/*"],
-      "@models/*": ["utils/*"],
+      "@config/*": ["config/*"],
+      "@controllers/*": ["controllers/*"],
+      "@middlewares/*": ["middlewares/*"],
+      "@models/*": ["models/*"],
       "@routes/*": ["routes/*"],
       "@utils/*": ["utils/*"],
     }                  
