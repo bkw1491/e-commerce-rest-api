@@ -1,14 +1,25 @@
 {
-  "compilerOptions": {                        
+  "compilerOptions": {
     "target": "es6",                               
     "module": "commonjs",                           
     "outDir": "./dist",                             
     "rootDir": "./",                             
     "strict": true,
     "moduleResolution": "node",
-    "esModuleInterop": true,                       
+    "esModuleInterop": true, 
+
+    "baseUrl": "./",                      
+    "paths": {
+      "@config/*": ["routes/*"],
+      "@controllers/*": ["routes/*"],
+      "@middlewares/*": ["routes/*"],
+      "@models/*": ["utils/*"],
+      "@routes/*": ["routes/*"],
+      "@utils/*": ["utils/*"],
+    }                  
   },
+  
   "exclude":[
     "./node_modules"
-  ]
+  ],
 }
