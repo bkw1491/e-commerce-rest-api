@@ -6,7 +6,6 @@ config({ path: resolve(__dirname, "./config/.env") })
 
 import express from 'express';
 
-
 const app = express();
 
 app.listen(process.env.PORT, () => {
