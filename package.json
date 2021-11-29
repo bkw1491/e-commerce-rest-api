@@ -2,7 +2,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node ./build/server.ts",
-    "dev": "nodemon --exec npx ts-node -r tsconfig-paths/register ./server.ts"
+    "dev": "nodemon --exec npx ts-node --r dotenv/config --r tsconfig-paths/register ./server.ts dotenv_config_path=./config/.env"
   },
   "devDependencies": {
     "@types/express": "^4.17.13",
