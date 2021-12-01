@@ -4,13 +4,13 @@ import { scryptSync, randomBytes, timingSafeEqual } from "crypto";
  * Hashes a plain text password with a salt.
  * Returns a string in the form [salt]:[hash]
  */
-export function hash(pswd: string) {
+export function hash(pass: string) {
 
   //generate a salt
   const salt = randomBytes(16).toString('hex');
 
   //hash the password passing in the salt
-  const hash = scryptSync(pswd, salt, 64).toString('hex');
+  const hash = scryptSync(pass, salt, 64).toString('hex');
 
   //return the has prepended by the salt
   return `${salt}:${hash}`;

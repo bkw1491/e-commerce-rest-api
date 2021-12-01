@@ -12,7 +12,7 @@
       "@config/*": ["config/*"],
       "@controllers/*": ["controllers/*"],
       "@middlewares/*": ["middlewares/*"],
-      "@models/*": ["models/*"],
+      "@interfaces/*": ["interfaces/*"],
       "@routes/*": ["routes/*"],
       "@utils/*": ["utils/*"],
     }                  

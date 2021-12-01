@@ -12,7 +12,7 @@ const app = express();
 app.use(express.json());
 
 //register routes
-app.use(userRouter);
+app.use("/", userRouter);
 
 //basic health check route to check status of api
 app.get("/health", (req: Request, res: Response) => {
