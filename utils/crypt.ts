@@ -20,11 +20,10 @@ export function hash(pass: string) {
 /**
  * Compares a candiate password to a hashed password
  */
-export async function compare(candidate: string, hash: string) {
+export function compare(candidate: string, hash: string) {
 
   const [salt, key] = hash.split(':');
   const hashedBuffer = scryptSync(candidate, salt, 64);
-
 
   const keyBuffer = Buffer.from(key, 'hex');
 

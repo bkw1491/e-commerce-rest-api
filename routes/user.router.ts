@@ -1,16 +1,18 @@
 import express from 'express';
+import validate from '@middlewares/validate';
 
 import { Request, Response, NextFunction} from 'express';
-import { createOne, authOne } from '@controllers/user.controller';
+import { authSchema, registerSchema } from '@models/user.model';
+import { createOne } from '@controllers/user.controller';
+import { issue } from '@utils/token';
 
 //intialize user router
 export const userRouter = express.Router();
 
-//register a new user
-userRouter.post("/register", async (req: Request, res: Response, next: NextFunction) => {
+
+userRouter.post("/register", validate(registerSchema), async (req: Request, res: Response, next: NextFunction) => {
 
   try {
-
     //call method from user.controller
     await createOne(req.body);
     //send the response
@@ -18,41 +20,23 @@ userRouter.post("/register", async (req: Request, res: Response, next: NextFunct
   }
 
   catch(err: unknown) {
-
+    //pass to error handling middleware
     next(err)
   }
 });
 
 
-//authenticate an existing user
-userRouter.post("/auth", async (req: Request, res: Response, next: NextFunction) => {
+userRouter.post("/auth", validate(authSchema), async (req: Request, res: Response, next: NextFunction) => {
   
   try {
-
     //call method from user.controller
-    await authOne(req.body);
-    //send the response
-    res.sendStatus(200);
+    const token = issue(req.body)
+    //send the token in the response
+    res.status(200).send(token);
   }
 
   catch(err: unknown) {
-
-    next(err)
-  }
-});
-
-//logout a user
-userRouter.post("/logout", (req: Request, res: Response, next: NextFunction) => {
-  
-  try {
-
-    //call method from user.controller
-    //send the response
-    res.sendStatus(200);
-  }
-
-  catch(err: unknown) {
-
+    //pass to error handling middleware
     next(err)
   }
 });
