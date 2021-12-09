@@ -1,6 +1,10 @@
 import query from '@config/database';
 import { IInventory } from '@models/inventory.model';
 
+/**
+ * Looks for an existing inventory in the database 
+ * with the provided id
+ */
 export async function findOne(id: number) : Promise<IInventory>{
 
   const sql = `SELECT *
@@ -12,6 +16,11 @@ export async function findOne(id: number) : Promise<IInventory>{
   return inventory[0];
 }
 
+
+/**
+ * Creates inventory record,
+ * called by product controller when a new product is created
+ */
 export async function createOne(inventory: IInventory) : Promise<void> {
 
   const sql = `INSERT INTO inventory (quantity)
@@ -21,6 +30,11 @@ export async function createOne(inventory: IInventory) : Promise<void> {
   await query<IInventory>(sql, [inventory.quantity])
 }
 
+
+/**
+ * Updates inventory record,
+ * with provided id and quantity
+ */
 export async function updateOne(inventory: IInventory) : Promise<void> {
 
   const sql = `UPDATE inventory
@@ -30,6 +44,11 @@ export async function updateOne(inventory: IInventory) : Promise<void> {
   await query<IInventory>(sql, [inventory.quantity, inventory.id]);
 }
 
+
+/**
+ * Removed inventory record,
+ * deletion of inventory should cascade to product table
+ */
 export async function deleteOne(id: number) : Promise<void> {
 
   const sql = `DELETE FROM inventory
