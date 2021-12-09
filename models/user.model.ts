@@ -16,7 +16,8 @@ export const registerSchema = object({
 }).refine(async input => {
   //check email is not in use
   return await !findOne(input.email)
-});
+  //custom error message for conflict
+}, {message: "Email Already In Use"});
 
 export const authSchema = object({
 
