@@ -1,6 +1,8 @@
 import mysql from 'mysql2/promise';
 
-import { DbQueryResult } from '@interfaces/IQueryResult';
+import { RowDataPacket, OkPacket } from 'mysql2';
+
+type DbQueryResult<T> = T & (RowDataPacket[] | RowDataPacket[][] | OkPacket[] | OkPacket);
 
 
 const pool = mysql.createPool({
