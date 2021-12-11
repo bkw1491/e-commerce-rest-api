@@ -1,12 +1,8 @@
-import mysql from 'mysql2/promise';
-
-import { RowDataPacket, OkPacket } from 'mysql2';
-
-type DbQueryResult<T> = T & (RowDataPacket[] | RowDataPacket[][] | OkPacket[] | OkPacket);
+import pg from 'node-postgres';
 
 
-const pool = mysql.createPool({
-  connectionLimit: 100,
+const pool = new pg.Pool({
+  max: 100,
   host: process.env["DB_HOST"],
   port: Number(process.env["DB_PORT"]),
   user: process.env["DB_USER"],
@@ -18,9 +14,9 @@ const pool = mysql.createPool({
 /**
  * Run a query using a pooled connection 
  */
- export default async function <T>(sql: string, options?: unknown[]): Promise<DbQueryResult<T[]>> {
+ export default async function<T>(sql: string, params?: unknown[]) : Promise<T[]>{
 
-  const [result] = await pool.execute<DbQueryResult<T[]>>(sql, options);
+  const result = await pool.query(sql, params);
 
-  return result;
+  return result.rows;
 }
