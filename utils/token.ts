@@ -1,5 +1,5 @@
 import jwt, { Secret } from 'jsonwebtoken';
-import { IUser } from "@models/user.model";
+import { IUser } from "schema/user.schema";
 
 
 export function issue(user: IUser) : string {
