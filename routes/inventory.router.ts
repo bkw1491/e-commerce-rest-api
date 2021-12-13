@@ -1,19 +1,20 @@
 import express from 'express';
-import validate from '@middlewares/validate';
+import { validateBody } from '@middlewares/validate';
 
-import { inventorySchema, updateInventorySchema } from '@models/inventory.model';
-import { deleteOne, findOne, updateOne } from '@controllers/inventory.controller';
+import { InventorySchema } from 'schema/inventory.schema';
+import { InventoryModel } from '@models/inventory.model';
 import { Request, Response, NextFunction } from 'express';
 
 
 export const inventoryRouter = express.Router();
 
 
-inventoryRouter.get("/", validate(inventorySchema), async (req: Request, res: Response, next: NextFunction) => {
+inventoryRouter.get("/", validateBody(InventorySchema.get), 
+  async (req: Request, res: Response, next: NextFunction) => {
 
   try {
     //call method from inventory controller
-    const result = await findOne(req.body.id)
+    const result = await InventoryModel.findOne(req.body.id)
     //send the response
     res.status(200).send(result);
   } 
@@ -24,11 +25,13 @@ inventoryRouter.get("/", validate(inventorySchema), async (req: Request, res: Re
   }
 });
 
-inventoryRouter.put("/", validate(updateInventorySchema), async (req: Request, res: Response, next: NextFunction) => {
+
+inventoryRouter.put("/", validateBody(InventorySchema.update), 
+  async (req: Request, res: Response, next: NextFunction) => {
 
   try {
     //call method from inventory controller
-    await updateOne(req.body);
+    await InventoryModel.updateOne(req.body);
     //nothing returns from the update
     res.sendStatus(200);
   } 
@@ -39,11 +42,13 @@ inventoryRouter.put("/", validate(updateInventorySchema), async (req: Request, r
   }
 });
 
-inventoryRouter.delete("/", async (req: Request, res: Response, next: NextFunction) => {
+
+inventoryRouter.delete("/", validateBody(InventorySchema.delete), 
+  async (req: Request, res: Response, next: NextFunction) => {
 
   try {
     //call method from inventory controller
-    await deleteOne(req.body.id);
+    await InventoryModel.deleteOne(req.body.id);
     //nothing returns from delete statement
     res.sendStatus(200)
   }
