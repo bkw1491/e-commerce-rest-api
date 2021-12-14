@@ -1,4 +1,3 @@
-import log from '@utils/logger';
 import { Request, Response, NextFunction } from 'express';
 import { ZodTypeAny } from 'zod';
 
@@ -9,7 +8,8 @@ export function validateBody(schema: ZodTypeAny) {
 
     try {
       //parse schmea async in case validation hits db
-      await schema.parseAsync(req.body)
+      //set req body to the return in case the body is mutated
+      req.body = await schema.parseAsync(req.body)
       //move to next middleware if schema passes
       next();
     }
