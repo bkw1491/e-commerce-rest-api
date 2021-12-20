@@ -2,15 +2,7 @@ import { CategoryModel } from '@models/category.model';
 import { ProductModel } from '@models/product.model';
 import { number, object, optional, string } from 'zod';
 
-export interface IProduct {
-  id: number,
-  category_id: number,
-  inventory: number,
-  name: string,
-  descr: string,
-  price: number,
-  image_url: string
-}
+
 
 const product = object({
 

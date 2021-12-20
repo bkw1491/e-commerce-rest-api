@@ -1,10 +1,6 @@
 import {object, string, number } from 'zod';
 import { CategoryModel } from '@models/category.model';
 
-export interface ICategory {
-  id: number,
-  name: string
-}
 
 const category = object({
 

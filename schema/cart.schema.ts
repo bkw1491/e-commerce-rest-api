@@ -1,12 +1,7 @@
 import { ProductModel } from '@models/product.model';
 import {object, number } from 'zod';
 
-export interface ICartItem {
-  id: number,
-  user_id: number
-  product_id: number,
-  quantity: number
-}
+
 
 const cart = object({
   id: number(),

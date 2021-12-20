@@ -1,6 +1,6 @@
 import query from '@config/database';
 
-import { IUser } from '@schemas/user.schema';
+import { IUser } from '@interfaces/IUser';
 import { hash } from '@utils/crypt';
 
 export const UserModel = {

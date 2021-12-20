@@ -1,6 +1,6 @@
 import query from '@config/database';
-import { ICategory } from "schema/category.schema";
-import { IProduct } from '@schemas/product.schema';
+import { ICategory } from "@interfaces/ICategory";
+import { IProduct } from '@interfaces/IProduct';
 
 export const CategoryModel = {
 

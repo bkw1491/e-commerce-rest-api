@@ -1,5 +1,5 @@
 import query from '@config/database';
-import { IProduct } from 'schema/product.schema';
+import { IProduct } from '@interfaces/IProduct';
 
 
 export const ProductModel = {

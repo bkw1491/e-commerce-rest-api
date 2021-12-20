@@ -1,5 +1,5 @@
 import query from "@config/database";
-import { ICartItem } from "@schemas/cart.schema";
+import { ICartItem } from "@interfaces/ICartItem";
 
 export const CartModel = {
 
@@ -47,5 +47,20 @@ export const CartModel = {
                 FROM removeFromCart($1);`
 
     return await query<ICartItem>(sql, [item.id]);
+  },
+
+  async checkout(user_id: number) : Promise<void> {
+
+    //get the cart items
+    const cart = await this.getItems({user_id})
+
+    //calculate a total cost
+   
+
+    //make a charge
+
+    //add each item to the order_item table
+
+    //add the order to the order table
   }
 }
