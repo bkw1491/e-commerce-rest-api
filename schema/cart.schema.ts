@@ -26,7 +26,7 @@ export const CartSchema = {
     if(!product || product.inventory < input.quantity) { return false }
     //schema passed
     return true
-  }),
+  }, {message: "product not found or is out of stock"}),
 
   update: cart.pick({id: true, quantity: true}),
   delete: cart.pick({id: true})
