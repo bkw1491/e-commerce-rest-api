@@ -3,6 +3,7 @@ import { ProductSchema } from 'schema/product.schema';
 import express from 'express';
 import { Request, Response, NextFunction } from 'express';
 import { ProductModel } from '@models/product.model';
+import { verifyJWT } from '@middlewares/verify';
 
 
 export const productRouter = express.Router();
@@ -42,7 +43,7 @@ async (req: Request, res: Response, next: NextFunction) => {
 })
 
 
-productRouter.post("/", validateBody(ProductSchema.create), 
+productRouter.post("/", verifyJWT("admin"), validateBody(ProductSchema.create), 
   async (req: Request, res: Response, next: NextFunction) => {
 
   try {
@@ -60,7 +61,7 @@ productRouter.post("/", validateBody(ProductSchema.create),
 })
 
 
-productRouter.put("/", validateBody(ProductSchema.update), 
+productRouter.put("/", verifyJWT("admin"), validateBody(ProductSchema.update), 
   async (req: Request, res: Response, next: NextFunction) => {
 
   try {
@@ -78,7 +79,7 @@ productRouter.put("/", validateBody(ProductSchema.update),
 })
 
 
-productRouter.delete("/", validateBody(ProductSchema.delete), 
+productRouter.delete("/", verifyJWT("admin"), validateBody(ProductSchema.delete), 
   async(req: Request, res: Response, next: NextFunction) => {
 
   try {
