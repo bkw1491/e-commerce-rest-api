@@ -1,4 +1,4 @@
-import { number, object, string, transformer } from 'zod';
+import { number, object, string } from 'zod';
 import { UserModel } from '@models/user.model';
 import { compare } from '@utils/crypt';
 
@@ -6,6 +6,7 @@ export interface IUser {
   id: number,
   email: string,
   password: string
+  admin: boolean
 }
 
 const user = object({
