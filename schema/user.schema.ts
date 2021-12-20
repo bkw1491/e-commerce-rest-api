@@ -20,7 +20,7 @@ const user = object({
   password:
     string().
     min(8).
-    max(255)
+    max(255),
 })
 
 
@@ -36,9 +36,10 @@ export const UserSchema = {
       const user = await UserModel.findOne(input.email);
       //user with email not found, schema rejects
       if(user) {
-        //!need to attach user id to req body, 
+        //!need to attach id and admin to req body, 
         //!not happy with this solution
         (input as any).id = user.id;
+        (input as any).admin = user.admin
         //returns false if passwords don't match
         return compare(input.password, user.password);
       }
