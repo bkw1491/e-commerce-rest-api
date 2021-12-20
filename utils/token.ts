@@ -1,4 +1,4 @@
-import jwt, { Secret } from 'jsonwebtoken';
+import jwt, { Jwt, Secret } from 'jsonwebtoken';
 import { IUser } from "schema/user.schema";
 
 
@@ -20,19 +20,20 @@ export function issue(user: IUser) : string {
   return `Bearer ${token}`;
 }
 
-export function verify(authHeader: string) : boolean {
+
+export function verify(authHeader: string) : Jwt | null  {
 
   try {
     //get the token from the header
     const token = authHeader.split(' ')[1];
     //verify the token with the secret key
-    jwt.verify(token, process.env.JWT_SECRET as Secret);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET as Secret, {complete: true});
     //token successfully verified
-    return true;
+    return decoded as Jwt;
   }
 
   catch(err: unknown) {
     //token not provided or is invalid
-    return false;
+    return null;
   }
 }

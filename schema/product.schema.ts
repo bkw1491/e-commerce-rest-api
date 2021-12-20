@@ -5,7 +5,7 @@ import { number, object, optional, string } from 'zod';
 export interface IProduct {
   id: number,
   category_id: number,
-  inventory_id: number,
+  inventory: number,
   name: string,
   descr: string,
   price: number,
@@ -22,8 +22,8 @@ const product = object({
     number().
     refine(async id => await CategoryModel.findOne(id), 
       {message: "category does not exist"}),
-  inventory_id:
-    number(),
+  inventory:
+      number(),
   name: 
     string().
     max(255),
@@ -39,14 +39,14 @@ const product = object({
 })
 
 export const ProductSchema = {
-
-  update: product.omit({inventory_id: true}),
-
+  
   get: object({
+    //schema rejects if param is not a number
     id: string().refine(value => !isNaN(Number(value)))
   }),
   
-  create: product.omit({id: true, inventory_id: true}),
+  create: product.omit({id: true}),
+  update: product,
   delete: product.pick({id: true})
 }
 

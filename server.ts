@@ -5,7 +5,6 @@ import { Request, Response } from 'express';
 import { userRouter } from '@routes/user.router';
 import { productRouter } from '@routes/product.router';
 import { categoryRouter } from '@routes/category.router';
-import { inventoryRouter } from '@routes/inventory.router';
 import { cartRouter } from '@routes/cart.router';
 
 //initlaize express
@@ -18,7 +17,6 @@ app.use(express.json());
 //register routes
 app.use("/", userRouter);
 app.use("/category", categoryRouter);
-app.use("/inventory", inventoryRouter);
 app.use("/product", productRouter);
 app.use("/cart", cartRouter);
 

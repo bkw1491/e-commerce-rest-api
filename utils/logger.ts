@@ -1,3 +1,7 @@
+
+/**
+ * Formats a message to create a log output 
+ */
 export default function log(msg: string) {
 
   //calling new date gets current time

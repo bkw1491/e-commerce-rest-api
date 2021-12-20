@@ -9,8 +9,7 @@ import { CategorySchema } from '@schemas/category.schema';
 export const categoryRouter = express.Router();
 
 
-categoryRouter.get("/:id", 
-  validateParams(CategorySchema.get),
+categoryRouter.get("/:id", validateParams(CategorySchema.get),
   async (req: Request, res: Response, next: NextFunction) => {
 
   try {
