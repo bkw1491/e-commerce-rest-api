@@ -4,6 +4,7 @@ import { validateBody, validateParams } from '@middlewares/validate';
 import { Request, Response, NextFunction } from 'express';
 import { CategoryModel } from '@models/category.model';
 import { CategorySchema } from '@schemas/category.schema';
+import { verifyJWT } from '@middlewares/verify';
 
 
 export const categoryRouter = express.Router();
@@ -27,7 +28,7 @@ categoryRouter.get("/:id", validateParams(CategorySchema.get),
 })
 
 
-categoryRouter.post("/", validateBody(CategorySchema.create),
+categoryRouter.post("/", verifyJWT("admin"), validateBody(CategorySchema.create),
   async (req: Request, res: Response, next: NextFunction) => {
 
   try {
@@ -44,7 +45,7 @@ categoryRouter.post("/", validateBody(CategorySchema.create),
 })
 
 
-categoryRouter.put("/", validateBody(CategorySchema.update),
+categoryRouter.put("/", verifyJWT("admin"), validateBody(CategorySchema.update),
   async (req: Request, res: Response, next: NextFunction) => {
 
   try {
@@ -62,7 +63,7 @@ categoryRouter.put("/", validateBody(CategorySchema.update),
 })
 
 
-categoryRouter.delete("/", validateBody(CategorySchema.delete),
+categoryRouter.delete("/", verifyJWT("admin"), validateBody(CategorySchema.delete),
   async (req: Request, res: Response, next: NextFunction) => {
 
   try {
