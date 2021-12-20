@@ -42,7 +42,8 @@ export const ProductSchema = {
   
   get: object({
     //schema rejects if param is not a number
-    id: string().refine(value => !isNaN(Number(value)))
+    id: string().refine(value => !isNaN(Number(value)),
+    {message: "product does not exist"})
   }),
   
   create: product.omit({id: true}),
