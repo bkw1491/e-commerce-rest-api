@@ -8,6 +8,7 @@ export function issue(user: IUser) : string {
   const payload = {
     iss: process.env.JWT_ISSUER,
     sub: user.id,
+    admin: user.admin
   };
   //signing options for jwt
   const options = {
