@@ -9,7 +9,7 @@ import { verifyJWT } from '@middlewares/verify';
 
 export const cartRouter = express.Router();
 
-cartRouter.get("/", verifyJWT, validateBody(CartSchema.get),
+cartRouter.get("/", verifyJWT("user"), validateBody(CartSchema.get),
   async (req: Request, res: Response, next: NextFunction) => {
 
   try {
@@ -26,7 +26,7 @@ cartRouter.get("/", verifyJWT, validateBody(CartSchema.get),
 })
 
 
-cartRouter.post("/", verifyJWT, validateBody(CartSchema.create),
+cartRouter.post("/", verifyJWT("user"), validateBody(CartSchema.create),
   async (req: Request, res: Response, next: NextFunction) => {
 
   try {
@@ -43,7 +43,7 @@ cartRouter.post("/", verifyJWT, validateBody(CartSchema.create),
 })
 
 
-cartRouter.put("/", verifyJWT, validateBody(CartSchema.update),
+cartRouter.put("/", verifyJWT("user"), validateBody(CartSchema.update),
   async (req: Request, res: Response, next: NextFunction) => {
 
   try {
@@ -61,7 +61,7 @@ cartRouter.put("/", verifyJWT, validateBody(CartSchema.update),
 })
 
 
-cartRouter.delete("/", verifyJWT, validateBody(CartSchema.delete),
+cartRouter.delete("/", verifyJWT("user"), validateBody(CartSchema.delete),
   async (req: Request, res: Response, next: NextFunction) => {
 
   try {
