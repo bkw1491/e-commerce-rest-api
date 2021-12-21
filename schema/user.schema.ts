@@ -21,13 +21,13 @@ const user = object({
 export const UserSchema = {
 
   register: user.omit({id: true}).
-    refine(async input => !await UserModel.findOne(input.email),
+    refine(async input => !await UserModel.findOneByEmail(input.email),
     {message: "email already in use"}),
 
   auth: user.omit({id: true}).
     refine(async input => {
       //look for user with supplied email
-      const user = await UserModel.findOne(input.email);
+      const user = await UserModel.findOneByEmail(input.email);
       //user with email not found, schema rejects
       if(user) {
         //!need to attach id and admin to req body, 
