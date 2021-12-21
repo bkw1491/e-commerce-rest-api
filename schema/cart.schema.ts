@@ -2,13 +2,13 @@ import { ProductModel } from '@models/product.model';
 import {object, number } from 'zod';
 
 
-
 const cart = object({
   id: number(),
   user_id: number(),
   product_id: number(),
   quantity: number().max(100)
 })
+
 
 export const CartSchema = {
 
