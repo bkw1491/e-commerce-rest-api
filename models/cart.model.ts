@@ -1,3 +1,4 @@
+import Stripe from 'stripe';
 import query from "@config/database";
 import { ICartItem } from "@interfaces/ICartItem";
 
@@ -49,18 +50,26 @@ export const CartModel = {
     return await query<ICartItem>(sql, [item.id]);
   },
 
-  async checkout(user_id: number) : Promise<void> {
+
+  async checkout(user_id: number) : Promise<string | null> {
 
     //get the cart items
     const cart = await this.getItems({user_id})
-
     //calculate a total cost
-   
+    const total_cost = cart.reduce((total, item) => {
+      return total + item.price;
+    }, 0);
 
-    //make a charge
+    const stripe = new Stripe(process.env.STRIPE_SECRET, {apiVersion: "2020-08-27", typescript: true})
 
-    //add each item to the order_item table
+    //create a payment intent
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: total_cost,
+      currency: 'gbp',
+      payment_method_types: ['card']
+    })
 
-    //add the order to the order table
+   //return the payment intent
+   return paymentIntent.client_secret
   }
 }

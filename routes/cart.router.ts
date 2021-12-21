@@ -10,19 +10,36 @@ import { verifyJWT } from '@middlewares/verify';
 export const cartRouter = express.Router();
 
 cartRouter.get("/", verifyJWT("user"), validateBody(CartSchema.get),
-  async (req: Request, res: Response, next: NextFunction) => {
-
+async (req: Request, res: Response, next: NextFunction) => {
+  
   try {
     //call method from cart model
     const cart = await CartModel.getItems(req.body);
     //send cart back to the user
     res.status(200).send(cart)
   } 
-
+  
   catch (err) {
     
     next(err);
   }
+})
+
+
+cartRouter.get("/checkout", verifyJWT("user"),
+  async (req: Request, res: Response, next: NextFunction) => {
+
+    try {
+      //call method from cart model
+      const intent = await CartModel.checkout(req.body.user_id);
+
+      res.status(200).send(intent);
+    } 
+    
+    catch (err: unknown) {
+      
+      next(err);
+    }
 })
 
 
