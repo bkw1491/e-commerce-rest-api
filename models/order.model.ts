@@ -1,5 +1,5 @@
-import query from '@config/database';
-import { IOrder } from '@interfaces/IOrder';
+import { Database } from '@config/database';
+import { IOrderItem } from '@interfaces/IOrderItem';
 
 export const OrderModel = {
 
@@ -9,14 +9,19 @@ export const OrderModel = {
    */
   async findOne(id: number) {
 
-    const sql = `SELECT  * 
-                 FROM    order
-                 WHERE   id = $1`;
+    const sql = `
+    
+    SELECT  * 
+    FROM    order o
+    JOIN    product p
+    ON      o.product_id = p.id
+    WHERE   o.id = $1`;
 
-    const result = await query<IOrder>(sql, [id]);
+    const result = await Database.one<IOrderItem>(sql, [id]);
 
     return result [0];
   },
+
 
   /**
    * Finds all orders associated with the supplied user id
@@ -24,60 +29,36 @@ export const OrderModel = {
    */
   async findMany(user_id: number) {
 
-    const sql = `SELECT  * 
-                 FROM    order
-                 WHERE   user_d = $1`;
+    const sql = `
+    
+    SELECT  * 
+    FROM    order o
+    JOIN    product p
+    ON      o.product_id = p.id
+    WHERE   o.user_id = $1`;
 
-    return await query<IOrder>(sql, [user_id]);
+    return await Database.one<IOrderItem>(sql, [user_id]);
   },
 
 
   /**
    * Updates the product inventory to reflect the new order,
-   * then adds the new order to the database.
+   * adds the new order to the database then removes the items
+   * from the user's cart
    * Returns the new order.
    */
-  async createOne(order: Omit<IOrder, "id">) {
+  async createOrder(order: Omit<IOrderItem, "id">) {
 
-    const sql = `INSERT INTO  order (user_id, total_cost)
-                 VALUES       ($1, $2)
-                 RETURNING    *`;
+    //remove items from user's cart
+    //update product inventory
+    //add order to the table
+    const sql = `
+    
+    `
 
-    const result = await query<IOrder>(sql, [order.user_id, order.total_cost]);
-
-    return result[0];
-  },
-
-
-  /**
-   * Updates an order with the supplied id and parameters.
-   * Returns the updated order
-   */
-  async updateOne(order: IOrder) {
-
-    const sql = `UPDATE     order (user_id, total_cost)
-                 SET        user_id = $1, total_cost = $2
-                 WHERE      id = $3
-                 RETURNING  *`;
-
-    const result = await query<IOrder>(sql, [order.user_id, order.total_cost, order.id]);
+    const result = await Database.one<IOrderItem>(sql, [order.user_id, order.product_id, 
+      order.quantity]);
 
     return result[0];
   },
-
-
-  /**
-   * Removed an order with the supplied id.
-   * Returns the removed order
-   */
-  async deleteOne(id: number) {
-
-    const sql = `DELETE FROM  order
-                 WHERE        id = $1
-                 RETURNING    *`;
-
-    const result = await query<IOrder>(sql, [id]);
-
-    return result[0];
-  }
 }

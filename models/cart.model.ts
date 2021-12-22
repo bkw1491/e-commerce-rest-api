@@ -1,57 +1,109 @@
 import Stripe from 'stripe';
-import query from "@config/database";
+
+import { Database } from "@config/database";
 import { ICartItem } from "@interfaces/ICartItem";
+
 
 export const CartModel = {
 
+   /**
+   * Returns the cart items associated
+   * with the supplied user id.
+   */
+  async getItems(item: Pick<ICartItem, "user_id">) {
 
-  async getItems(item: Pick<ICartItem, "user_id">) : Promise<ICartItem[]> {
+    //perform an inner join to return all the products in the cart
+    const sql = `
 
-    //perform an inner join to return all the product in the cart
-    const sql = `SELECT c.id, p.name, p.descr, p.price, c.quantity
-                FROM cart c JOIN product p
-                ON c.product_id = p.id
-                WHERE c.user_id = $1;`
+      SELECT c.id, p.name, p.descr, p.price, c.quantity
+      FROM   cart c 
+      JOIN   product p
+      ON     c.product_id = p.id
+      WHERE  c.user_id = $1;`
     
-    return await query<ICartItem>(sql, [item.user_id]);
+    return await Database.one<ICartItem>(sql, [item.user_id]);
   },
 
 
-  async addItem(item: Omit<ICartItem, "id">) : Promise<ICartItem[]> {
-    //query an sql func which adds row to cart table
-    //updates the product's inventory
-    //then returns a table from an inner join with product
-    const sql = `SELECT * 
-                FROM addToCart($1, $2, $3)`;
+   /**
+   * Add an item to the user's cart.
+   * Returns the cart with the new item.
+   */
+  async addItem(item: Omit<ICartItem, "id">) {
+    //insert into the cart table
+    const sql = `
 
-    return await query<ICartItem>(sql, [item.user_id, 
+      INSERT INTO  cart (user_id, product_id, quantity)
+      VALUES       ($1, $2, $3);
+    
+      SELECT c.id, p.name, p.descr, p.price, c.quantity
+      FROM   cart c 
+      JOIN   product p
+      ON     c.product_id = p.id
+      WHERE  c.user_id = $1;`;
+
+    return await Database.multi<ICartItem>(sql, [item.user_id, 
       item.product_id, item.quantity]);
   },
 
 
-  async updateItem(item: ICartItem) : Promise<ICartItem[]> {
-    //query an sql func which updates row in cart table
-    //updated the product's inventory
-    //then returns a table from an inner join with product
-    const sql = `SELECT *
-                FROM updateCart($1, $2)`
+  /**
+  * Update an item in the user's cart.
+  * Returns the cart with the updated item.
+  */
+  //!problem here, need user_id from prev query, but need prev
+  //!query to finish before returning the cart
+  async updateItem(item: ICartItem) {
 
-    return await query<ICartItem>(sql, [item.id, item.quantity]);
+    const sql = `
+
+      WITH updated as (
+            
+        UPDATE cart
+        SET quantity = qty
+        WHERE cart.id = cid
+        RETURNING user_id
+      )
+      
+      SELECT c.id, p.name, p.descr, p.price, c.quantity
+      FROM   cart c
+      JOIN   product p ON c.product_id = p.id
+      WHERE  c.user_id = (SELECT user_id FROM removed)
+      AND    c.id <> cid;`
+
+    return await Database.one<ICartItem>(sql, [item.id, item.quantity]);
   },
 
 
-  async deleteItem(item: Pick<ICartItem, "id">) : Promise<ICartItem[]> {
-    //query an sql func which updates row in cart table
-    //updated the product's inventory
-    //then returns a table from an inner join with product
-    const sql = `SELECT *
-                FROM removeFromCart($1);`
+  /**
+  * Removes an item in the user's cart.
+  * Returns the cart with the item removed.
+  */
+  async deleteItem(item: Pick<ICartItem, "id">) {
 
-    return await query<ICartItem>(sql, [item.id]);
+    const sql = `
+    
+    WITH removed AS (
+
+      DELETE FROM cart
+      WHERE cart.id = cid
+      RETURNING user_id
+    )
+
+    SELECT c.id, p.name, p.descr, p.price, c.quantity
+    FROM   cart c
+    JOIN   product p ON c.product_id = p.id
+    WHERE  c.user_id = (SELECT user_id FROM removed)
+    AND    c.id <> cid;`
+
+    return await Database.one<ICartItem>(sql, [item.id]);
   },
 
-
-  async checkout(user_id: number) : Promise<string | null> {
+  /**
+  * Creates a new payment intent using stripe.
+  * Returns the client secret for the intent.
+  */
+  async checkout(user_id: number) {
 
     //get the cart items
     const cart = await this.getItems({user_id})

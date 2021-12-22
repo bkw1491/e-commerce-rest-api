@@ -1,5 +1,4 @@
-import query from '@config/database';
-
+import { Database } from '@config/database';
 import { IUser } from '@interfaces/IUser';
 import { hash } from '@utils/crypt';
 
@@ -12,13 +11,15 @@ export const UserModel = {
    */
   async findOneByEmail(email: string) {
     //email is unique
-    const sql = `SELECT  *
-                 FROM    users
-                 WHERE   email = $1
-                 LIMIT   1`;
-    //use prepared statement
-    const result = await query<IUser>(sql, [email]);
-    //always only 1 result
+    const sql = `
+    
+      SELECT  *
+      FROM    users
+      WHERE   email = $1
+      LIMIT   1`;
+
+    const result = await Database.one<IUser>(sql, [email]);
+
     return result[0];
   },
 
@@ -29,11 +30,13 @@ export const UserModel = {
    */
   async findOneById(id: number) {
 
-    const sql = `SELECT  *
-                 FROM    users
-                 WHERE   id = $1`;
+    const sql = `
 
-    const result = await query<IUser>(sql, [id]);
+      SELECT  *
+      FROM    users
+      WHERE   id = $1`;
+
+    const result = await Database.one<IUser>(sql, [id]);
 
     return result[0];
   },
@@ -47,11 +50,13 @@ export const UserModel = {
   
     const hashed = hash(user.password);
 
-    const sql = `INSERT INTO   users (email, password)
-                 VALUES        ($1, $2)
-                 RETURNING     *`;
+    const sql = `
+    
+      INSERT INTO   users (email, password)
+      VALUES        ($1, $2)
+      RETURNING     *`;
  
-    const result = await query<IUser>(sql, [user.email, hashed]);
+    const result = await Database.one<IUser>(sql, [user.email, hashed]);
 
     return result[0].id;
   }

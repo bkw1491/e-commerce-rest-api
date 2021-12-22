@@ -50,7 +50,7 @@ orderRouter.post("/", async (req: Request, res: Response, next: NextFunction) =>
 
   try {
 
-    const order = await OrderModel.createOne(req.body);
+    const order = await OrderModel.createOrder(req.body);
 
     res.status(200).send(order);
   } 
