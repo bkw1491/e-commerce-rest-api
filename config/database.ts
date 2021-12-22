@@ -11,12 +11,27 @@ const pool = new pg.Pool({
 });
 
 
-/**
- * Run a query using a pooled connection 
- */
- export default async function<T>(sql: string, params?: unknown[]) : Promise<T[]>{
+export const Database = {
 
-  const result = await pool.query(sql, params);
+  /**
+  * Run a single query using the connection pool. 
+  */
+  async one<T>(sql: string, params?: unknown[]) : Promise<T[]>{
+    //run the query on a pooled connection
+    const result = await pool.query(sql, params);
+    //single query returns one result
+    return result.rows;
 
-  return result.rows;
+  },
+
+ /**
+  * Runs multiple queries using the connection pool. 
+  */
+  async multi<T>(sql: string, params?: unknown[]) {
+    //run multiple queries on a single connection
+    const results = await pool.query(sql, params);
+    console.log(results);
+    //multi query returns an array of results
+    return results.rows;
+  }
 }
