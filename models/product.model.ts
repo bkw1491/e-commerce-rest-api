@@ -1,22 +1,22 @@
-import { Database } from '@config/database';
+import { Db } from '@config/database';
 import { IProduct } from '@interfaces/IProduct';
 
 
 export const ProductModel = {
 
   
-  async findAll() : Promise<IProduct[]> {
+  async findAll() {
   
     const sql = `
 
       SELECT *
       FROM   product`;
   
-    return await Database.one<IProduct>(sql);
+    return await Db.many<IProduct>(sql);
   },
 
   
-  async findOne(id: number) : Promise<IProduct> {
+  async findOne(id: number) {
   
     const sql = `
 
@@ -24,13 +24,20 @@ export const ProductModel = {
       FROM   product
       WHERE  id = $1`;
   
-    const result = await Database.one<IProduct>(sql, [id]);
-    //query returns only one row
-    return result[0];
+    return await Db.one<IProduct>(sql, [id]);
   },
 
   
-  async createOne(product: Omit<IProduct, "id">) : Promise<IProduct> {
+  async createOne(product: Omit<IProduct, "id">) {
+
+    const { 
+      inventory, 
+      categoryId, 
+      name, 
+      descr, 
+      price, 
+      imageUrl 
+    } = product
   
     const sql = `
 
@@ -40,37 +47,44 @@ export const ProductModel = {
                           descr, 
                           price, 
                           image_url)
-      VALUES              ($1, $2, $3, $4, $5, $6)
-      RETURNING           *`
+      VALUES      ($1, $2, $3, $4, $5, $6)
+      RETURNING   *`
                 
-    const result = await Database.one<IProduct>(sql, 
-      [product.inventory, product.category_id, product.name, 
-      product.descr, product.price, product.image_url]);
-    //return the inserted row
-    return result[0];
+    return await Db.one<IProduct>(sql, [inventory, 
+      categoryId, name, descr, price, imageUrl]);
   },
 
   
-  async updateOne(product: IProduct) : Promise<IProduct>{
+  async updateOne(product: IProduct) {
+
+    const {
+      id,
+      inventory, 
+      categoryId, 
+      name, 
+      descr, 
+      price, 
+      imageUrl 
+    } = product
   
-    const sql = `UPDATE    product
-                 SET       inventory = $1 
-                           name = $2, 
-                           descr = $3, 
-                           price = $4, 
-                           image_url = $5 
-                 WHERE     id = $5
-                 RETURNING *`;
+    const sql = `
+    
+      UPDATE    product
+      SET       category_id = $1,
+                inventory = $2,
+                name = $3, 
+                descr = $4, 
+                price = $5, 
+                image_url = $6
+      WHERE     id = $7
+      RETURNING *`;
    
-    const result = await Database.one<IProduct>(sql, 
-      [product.name, product.descr, product.price,
-      product.inventory, product.image_url, product.id]);
-    //return the updated row
-    return result[0];
+    return await Db.one<IProduct>(sql, [categoryId, 
+      inventory, name, descr, price, imageUrl, id]);
   },
 
   
-  async deleteOne(id: number) : Promise<IProduct> {
+  async deleteOne(id: number) {
     
     const sql = `
 
@@ -78,9 +92,7 @@ export const ProductModel = {
       WHERE       id = $1
       RETURNING   *`;
   
-    const result = await Database.one<IProduct>(sql, [id]);
-    //return the deleted row
-    return result[0];
+    return await Db.one<IProduct>(sql, [id]);
   }
 }
 
