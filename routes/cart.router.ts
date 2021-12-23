@@ -14,7 +14,7 @@ async (req: Request, res: Response, next: NextFunction) => {
   
   try {
     //call method from cart model
-    const cart = await CartModel.getItems(req.body);
+    const cart = await CartModel.findItems(req.body);
     //send cart back to the user
     res.status(200).send(cart)
   } 

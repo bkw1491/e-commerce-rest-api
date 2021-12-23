@@ -14,10 +14,9 @@ categoryRouter.get("/:id", validateParams(CategorySchema.get),
   async (req: Request, res: Response, next: NextFunction) => {
 
   try {
-    //call method from product model
-    const products = 
-      await CategoryModel.findProducts(Number(req.params.id));
-    //send the array of products back
+    //returns an array of products filtered by category
+    const products = await CategoryModel.findMany(Number(req.params.id));
+
     res.status(200).send(products);
   } 
 
@@ -49,11 +48,10 @@ categoryRouter.put("/", verifyJWT("admin"), validateBody(CategorySchema.update),
   async (req: Request, res: Response, next: NextFunction) => {
 
   try {
-    //call method from category model
+
     const updatedCategory = await CategoryModel.updateOne(req.body);
-    //send updated category back
+
     res.status(200).send(updatedCategory);
-    
   } 
   
   catch (err) {
@@ -67,9 +65,9 @@ categoryRouter.delete("/", verifyJWT("admin"), validateBody(CategorySchema.delet
   async (req: Request, res: Response, next: NextFunction) => {
 
   try {
-    //call method from category model
+
     const deletedCategory = await CategoryModel.deleteOne(req.body.id);
-    //send updated category back
+
     res.status(200).send(deletedCategory);
   } 
   

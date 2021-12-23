@@ -1,33 +1,22 @@
-import { Database } from '@config/database';
+import { Db } from '@config/database';
 import { IUser } from '@interfaces/IUser';
 import { hash } from '@utils/crypt';
 
 
 export const UserModel = {
   
-  /**
-   * Finds a user by email. Returns null if 
-   * the user is not found 
-   */
   async findOneByEmail(email: string) {
-    //email is unique
+
     const sql = `
     
       SELECT  *
       FROM    users
-      WHERE   email = $1
-      LIMIT   1`;
+      WHERE   email = $1`;
 
-    const result = await Database.one<IUser>(sql, [email]);
-
-    return result[0];
+    return await Db.one<IUser>(sql, [email]);
   },
 
 
-  /**
-   * Finds a user by id. Returns null if
-   * the user is not found
-   */
   async findOneById(id: number) {
 
     const sql = `
@@ -36,19 +25,15 @@ export const UserModel = {
       FROM    users
       WHERE   id = $1`;
 
-    const result = await Database.one<IUser>(sql, [id]);
-
-    return result[0];
+    return await Db.one<IUser>(sql, [id]);
   },
   
   
-  /**
-   * Hashes the password then adds the new user 
-   * to the database. Returns the user_id
-   */
   async createOne(user: IUser) {
+
+    const { email, password } = user
   
-    const hashed = hash(user.password);
+    const hashed = hash(password);
 
     const sql = `
     
@@ -56,9 +41,8 @@ export const UserModel = {
       VALUES        ($1, $2)
       RETURNING     *`;
  
-    const result = await Database.one<IUser>(sql, [user.email, hashed]);
-
-    return result[0].id;
+    //only want to return the id to the user
+    return (await Db.one<IUser>(sql, [email, hashed])).id;
   }
 }
 
