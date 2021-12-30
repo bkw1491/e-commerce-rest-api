@@ -96,10 +96,11 @@ export const CartModel = {
     //intial order status is pending
     await Db.one<IOrder>(sql, [user_id, total_cost, new Date(), "PENDING"]);
     //initiate stripe
-    //TODO why is ! needed here?
+
+    //TODO STRIPE_SECRET should never be null here
     const stripe = new Stripe(process.env.STRIPE_SECRET!, 
       {apiVersion: "2020-08-27", typescript: true});
-    //TODO maybe type the lineItem obj
+
     const line_items = cart.map(item => {
       return {
         price_data: {
