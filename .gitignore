@@ -2,3 +2,4 @@ node_modules
 tsconfig
 config/.env
 .vscode/settings.json
+./dist
