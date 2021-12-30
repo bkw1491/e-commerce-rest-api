@@ -1,7 +1,5 @@
 import { Db } from "@config/database";
 import { ICartItem } from "@interfaces/ICartItem";
-import { OrderModel } from './order.model';
-import { IOrderItem } from '@interfaces/IOrderItem';
 import { IOrder } from '@interfaces/IOrder';
 import { Stripe } from "stripe";
 
@@ -57,8 +55,8 @@ export const CartModel = {
     const sql = `
           
       UPDATE cart
-      SET quantity = $1
-      WHERE cart.id = $2`
+      SET    quantity = $1
+      WHERE  cart.id = $2`
 
     //update item in the cart
     const result = await Db.one<ICartItem>(sql, [quantity, id]);
@@ -95,7 +93,6 @@ export const CartModel = {
       RETURNING   *`
     //intial order status is pending
     await Db.one<IOrder>(sql, [user_id, total_cost, new Date(), "PENDING"]);
-    //initiate stripe
 
     //TODO STRIPE_SECRET should never be null here
     const stripe = new Stripe(process.env.STRIPE_SECRET!, 
@@ -123,7 +120,6 @@ export const CartModel = {
       cancel_url: 'https://example.com/cancel',
     });
 
-    console.log(session);
     //TODO handle this null
     return session.url!;
   }

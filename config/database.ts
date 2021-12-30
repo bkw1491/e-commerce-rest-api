@@ -1,25 +1,30 @@
 import pg from 'pg'
 
-//options for production and development
-const dbOptions = process.env.NODE_ENV === "development" 
-? {
-  max: 20,
-  host: process.env.DATABASE_URL,
-  port: Number(process.env.DATABASE_PORT),
-  user: process.env.DATABASE_USER,
-  password: process.env.DATABASE_PASSWORD, 
-  database: process.env.DATABASE_NAME
-}
+function getOptions(env: string) {
+  //options for dev
+  if(env === "development") {
 
-: {
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
+    return {
+      max: 20,
+      host: process.env.DATABASE_URL,
+      port: Number(process.env.DATABASE_PORT),
+      user: process.env.DATABASE_USER,
+      password: process.env.DATABASE_PASSWORD, 
+      database: process.env.DATABASE_NAME
+    }
+  }
+  //production
+  return {
+
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+      rejectUnauthorized: false
+    }
   }
 }
 
 //intialize a new ctn pool using above options
-const pool = new pg.Pool(dbOptions);
+const pool = new pg.Pool(getOptions(process.env.NODE_ENV));
 
 
 export const Db = {
