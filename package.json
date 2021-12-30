@@ -1,9 +1,8 @@
 {
   "scripts": {
     "build": "tsc",
-    "start": "node dist/server.js",
-    "dev": "nodemon --exec npx ts-node -r dotenv/config -r tsconfig-paths/register ./server.ts dotenv_config_path=./config/.env",
-    "postinstall": "tsc"
+    "start": "node ./dist/server.js",
+    "dev": "nodemon --exec npx ts-node -r dotenv/config -r tsconfig-paths/register ./server.ts dotenv_config_path=./config/.env"
   },
   "engines": {
     "node": "16.13.0"
