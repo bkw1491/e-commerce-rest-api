@@ -3,11 +3,11 @@ import pg from 'pg'
 
 const pool = new pg.Pool({
   max: 20,
-  host: process.env.DB_URL,
-  port: Number(process.env.DB_PORT),
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD, 
-  database: process.env.DB_NAME
+  host: process.env.DATABASE_URL,
+  port: Number(process.env.DATABASE_PORT),
+  user: process.env.DATABASE_USER,
+  password: process.env.DATABASE_PASSWORD, 
+  database: process.env.DATABASE_NAME
 });
 
 

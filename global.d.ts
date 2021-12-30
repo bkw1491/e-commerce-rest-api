@@ -9,11 +9,11 @@ declare namespace NodeJS {
     JWT_EXPIRY: string;
 
     //database env variables
-    DB_NAME: string;
-    DB_URL: string;
-    DB_USER: string;
-    DB_PASSWORD: string;
-    DB_PORT: string;
+    DATABASE_NAME: string;
+    DATABASE_URL: string;
+    DATABASE_USER: string;
+    DATABASE_PASSWORD: string;
+    DATABASE_PORT: string;
 
     //stripe secret key
     STRIPE_SECRET: string
