@@ -16,14 +16,14 @@ const app = express();
 app.use(express.json());
 
 //register routes
-app.use("/", userRouter);
-app.use("/category", categoryRouter);
-app.use("/product", productRouter);
-app.use("/cart", cartRouter);
-app.use("/order", orderRouter);
+app.use("api/", userRouter);
+app.use("api/category", categoryRouter);
+app.use("api/product", productRouter);
+app.use("api/cart", cartRouter);
+app.use("api/order", orderRouter);
 
 //basic health check route to check status of api
-app.get("/health", (req: Request, res: Response) => {
+app.get("api/health", (req: Request, res: Response) => {
   res.sendStatus(200);
 });
 
