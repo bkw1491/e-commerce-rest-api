@@ -1,11 +1,13 @@
 {
   "scripts": {
     "build": "tsc",
-    "start": "node ./build/server.ts",
+    "start": "serve -s build",
     "dev": "nodemon --exec npx ts-node -r dotenv/config -r tsconfig-paths/register ./server.ts dotenv_config_path=./config/.env",
     "postinstall": "tsc"
   },
-  "engines": { "node": "16.13.0"},
+  "engines": {
+    "node": "16.13.0"
+  },
   "devDependencies": {
     "@types/express": "^4.17.13",
     "@types/jsonwebtoken": "^8.5.6",
@@ -21,6 +23,7 @@
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "pg": "^8.7.1",
+    "serve": "^13.0.2",
     "stripe": "^8.194.0",
     "zod": "^3.11.6"
   }
