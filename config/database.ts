@@ -3,7 +3,7 @@ import pg from 'pg'
 
 const pool = new pg.Pool({
   max: 20,
-  host: process.env.DB_HOST,
+  host: process.env.DB_URL,
   port: Number(process.env.DB_PORT),
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD, 
