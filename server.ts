@@ -6,6 +6,7 @@ import { userRouter } from '@routes/user.router';
 import { productRouter } from '@routes/product.router';
 import { categoryRouter } from '@routes/category.router';
 import { cartRouter } from '@routes/cart.router';
+import { orderRouter } from '@routes/order.router';
 
 //initlaize express
 const app = express();
@@ -19,7 +20,7 @@ app.use("/", userRouter);
 app.use("/category", categoryRouter);
 app.use("/product", productRouter);
 app.use("/cart", cartRouter);
-
+app.use("/order", orderRouter);
 
 //basic health check route to check status of api
 app.get("/health", (req: Request, res: Response) => {

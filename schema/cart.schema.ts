@@ -1,3 +1,4 @@
+import { CartModel } from '@models/cart.model';
 import { ProductModel } from '@models/product.model';
 import {object, number } from 'zod';
 
@@ -24,5 +25,8 @@ export const CartSchema = {
   }, {message: "product not found or is out of stock"}),
 
   update: cart.pick({id: true, quantity: true}),
-  delete: cart.pick({id: true})
+  delete: cart.pick({id: true}).refine(async input => {
+    
+    return await CartModel.findOne(input.id);
+  }, {message: "product not in cart"})
 }

@@ -1,4 +1,4 @@
-import { number, object } from 'zod'
+import { date, number, object } from 'zod'
 import { OrderModel } from '@models/order.model'
 import { UserModel } from '@models/user.model'
 
@@ -7,7 +7,8 @@ const order = object({
 
   id: number().refine(async id => await OrderModel.findOne(id)),
   user_id: number().refine(async user_id => await UserModel.findOneById(user_id)),
-  total_cost: number()
+  total_cost: number(),
+  placed_date: date()
 });
 
 

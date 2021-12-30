@@ -14,7 +14,7 @@ async (req: Request, res: Response, next: NextFunction) => {
   
   try {
     //call method from cart model
-    const cart = await CartModel.findItems(req.body);
+    const cart = await CartModel.findMany(req.body.user_id);
     //send cart back to the user
     res.status(200).send(cart)
   } 
@@ -26,14 +26,14 @@ async (req: Request, res: Response, next: NextFunction) => {
 })
 
 
-cartRouter.get("/checkout", verifyJWT("user"),
+cartRouter.post("/checkout", verifyJWT("user"),
   async (req: Request, res: Response, next: NextFunction) => {
 
     try {
       //call method from cart model
-      const intent = await CartModel.checkout(req.body.user_id);
+      const paymentUrl = await CartModel.checkout(req.body.user_id);
 
-      res.status(200).send(intent);
+      res.redirect(paymentUrl);
     } 
     
     catch (err: unknown) {
@@ -83,7 +83,7 @@ cartRouter.delete("/", verifyJWT("user"), validateBody(CartSchema.delete),
 
   try {
     //call method from cart model
-    const cart = await CartModel.deleteItem(req.body);
+    const cart = await CartModel.deleteItem(req.body.id);
     //send the cart back in the response
     res.status(200).send(cart);    
   } 

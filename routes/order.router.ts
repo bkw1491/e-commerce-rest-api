@@ -7,7 +7,7 @@ import { validateBody } from '@middlewares/validate';
 import { OrderSchema } from '@schemas/order.schema';
 
 
-const orderRouter = express.Router();
+export const orderRouter = express.Router();
 
 
 orderRouter.get("/", verifyJWT("admin"), validateBody(OrderSchema.getOne), 
@@ -15,7 +15,7 @@ orderRouter.get("/", verifyJWT("admin"), validateBody(OrderSchema.getOne),
 
   try {
 
-    const order = await OrderModel.findOne(req.body);
+    const order = await OrderModel.findOne(req.body.id);
 
     res.status(200).send(order);
 
@@ -33,7 +33,7 @@ orderRouter.get("/myorders", verifyJWT("user"), validateBody(OrderSchema.getMany
 
   try {
 
-    const order = await OrderModel.findMany(req.body);
+    const order = await OrderModel.findMany(req.body.user_id);
 
     res.status(200).send(order);
   } 
@@ -44,53 +44,4 @@ orderRouter.get("/myorders", verifyJWT("user"), validateBody(OrderSchema.getMany
   }
 });
 
-//endpoint should be called by stripe webhook
-//need to make sure this can only be called by webhook
-orderRouter.post("/", async (req: Request, res: Response, next: NextFunction) => {
-
-  try {
-
-    const order = await OrderModel.createOrder(req.body);
-
-    res.status(200).send(order);
-  } 
-  
-  catch (err) {
-    
-    next(err);
-  }
-});
-
-
-orderRouter.put("/", verifyJWT("admin"), validateBody(OrderSchema.update),
-  async (req: Request, res: Response, next: NextFunction) => {
-
-  try {
-
-    const order = await OrderModel.updateOne(req.body);
-
-    res.status(200).send(order);
-  } 
-  
-  catch (err) {
-    
-    next(err);
-  }
-});
-
-
-orderRouter.delete("/", verifyJWT("admin"), validateBody(OrderSchema.delete),
-  async (req: Request, res: Response, next: NextFunction) => {
-
-  try {
-
-    const order = await OrderModel.deleteOne(req.body);
-
-    res.status(200).send(order);
-  } 
-  
-  catch (err) {
-    
-    next(err);
-  }
-});
+//TODO webhook endpoint here when order succeeds
