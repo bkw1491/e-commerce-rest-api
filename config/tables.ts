@@ -45,7 +45,7 @@ const sqlCart = `
 
 const sqlOrder = `
 
-   CREATE TABLE IF NOT EXISTS "order" (
+   CREATE TABLE IF NOT EXISTS order (
     status        VARCHAR(255)    NOT NULL,
     placed_date   DATE            NOT NULL,
     total_cost    REAL            NOT NULL,
