@@ -1,7 +1,7 @@
 {
   "scripts": {
     "build": "tsc",
-    "start": "node ./dist/server.js",
+    "start": "node ./dist/server.js -r tsconfig-paths/register",
     "dev": "nodemon --exec npx ts-node -r dotenv/config -r tsconfig-paths/register ./server.ts dotenv_config_path=./config/.env"
   },
   "engines": {
