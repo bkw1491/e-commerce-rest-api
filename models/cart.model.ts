@@ -88,7 +88,7 @@ export const CartModel = {
     }, 0);
     //return the inserted row- need to attach id to order items later
     const sql = `
-      INSERT INTO "order" (user_id, total_cost, placed_date, status)
+      INSERT INTO orders (user_id, total_cost, placed_date, status)
       VALUES      ($1, $2, $3, $4)
       RETURNING   *`
     //intial order status is pending

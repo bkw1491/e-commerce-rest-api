@@ -51,7 +51,7 @@ export const OrderModel = {
     //first update status of order to complete
     const sql = `
 
-      UPDATE "order"
+      UPDATE  orders
       SET     status = "COMPLETED"
       WHERE   user_ id = $1`;
  
