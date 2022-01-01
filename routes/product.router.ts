@@ -1,5 +1,5 @@
 import { validateBody, validateParams } from '@middlewares/validate';
-import { ProductSchema } from 'schema/product.schema';
+import { ProductSchema } from '@schemas/product.schema';
 import express from 'express';
 import { Request, Response, NextFunction } from 'express';
 import { ProductModel } from '@models/product.model';
