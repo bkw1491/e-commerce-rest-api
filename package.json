@@ -9,13 +9,13 @@
   },
   "_moduleAliases": {
     "@root" : "./",
-    "@config": "config",
-    "@models": "models",
-    "@interfaces": "interfaces",
-    "@middlewares": "middlewares",
-    "@schemas": "schema",
-    "@routes": "routes",
-    "@utils": "utils"
+    "@config": "config/*",
+    "@models": "models/*",
+    "@interfaces": "interfaces/*",
+    "@middlewares": "middlewares/*",
+    "@schemas": "schema/*",
+    "@routes": "routes/*",
+    "@utils": "utils/*"
   },
   "devDependencies": {
     "@types/express": "^4.17.13",
