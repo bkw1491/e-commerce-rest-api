@@ -1,5 +1,7 @@
 import pg from 'pg'
+import { setupTables } from './tables';
 
+//TODO better way to manage different enviroments?
 function getOptions(env: string) {
   //options for dev
   if(env === "development") {
@@ -43,3 +45,5 @@ export const Db = {
     return result.rows;
   },
 }
+
+setupTables();
