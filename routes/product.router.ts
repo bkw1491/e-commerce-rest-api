@@ -1,6 +1,7 @@
+import express from 'express';
+
 import { validateBody, validateParams } from '@middlewares/validate';
 import { ProductSchema } from '@schemas/product.schema';
-import express from 'express';
 import { Request, Response, NextFunction } from 'express';
 import { ProductModel } from '@models/product.model';
 import { verifyJWT } from '@middlewares/verify';
