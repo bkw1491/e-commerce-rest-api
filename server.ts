@@ -1,4 +1,3 @@
-import 'module-alias/register';
 import express from 'express';
 import log from '@utils/logger';
 
@@ -24,7 +23,7 @@ app.use("api/cart", cartRouter);
 app.use("api/order", orderRouter);
 
 //basic health check route to check status of api
-app.get("api/health", (req: Request, res: Response) => {
+app.get("/", (req: Request, res: Response) => {
   res.sendStatus(200);
 });
 
