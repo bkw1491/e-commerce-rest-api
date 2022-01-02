@@ -3,12 +3,12 @@ import log from '@utils/logger';
 import { Db } from "@config/database";
 import { ICartItem } from "@interfaces/ICartItem";
 import { IOrder } from '@interfaces/IOrder';
-import { Stripe } from "stripe";
+import { stripeSession } from '@utils/stripe';
 
 
 export const CartModel = {
 
-  async findOne(cartId: number) {
+  async findOne(id: number) {
 
     const sql = `
       SELECT *
@@ -16,11 +16,11 @@ export const CartModel = {
       WHERE  id = $1
     `
 
-    return await Db.one<ICartItem>(sql, [cartId]);
+    return await Db.one<ICartItem>(sql, [id]);
   },
   
 
-  async findMany(userId: number) {
+  async findMany(user_id: number) {
 
     const sql = `
 
@@ -30,7 +30,7 @@ export const CartModel = {
       ON     c.product_id = p.id
       WHERE  c.user_id = $1;`
     
-    return await Db.many<ICartItem>(sql, [userId]);
+    return await Db.many<ICartItem>(sql, [user_id]);
   },
 
 
@@ -67,7 +67,7 @@ export const CartModel = {
   },
 
 
-  async deleteItem(cartId: number) {
+  async deleteItem(id: number) {
 
     const sql = `
 
@@ -75,7 +75,7 @@ export const CartModel = {
       WHERE       cart.id = $1
       RETURNING   user_id`
 
-    const result = await Db.one<ICartItem>(sql, [cartId]);
+    const result = await Db.one<ICartItem>(sql, [id]);
     //return the user's cart
     return this.findMany(result.user_id);
   },
@@ -85,47 +85,17 @@ export const CartModel = {
     //get items in user's cart
     const cart = await this.findMany(user_id);
     //get a total cost for all items in user's cart
-    const total_cost = cart.reduce((total, prev) => {
-      return total + prev.price;
-    }, 0);
+    const total_cost = cart.reduce((total, prev) => total + prev.price, 0);
     //return the inserted row- need to attach id to order items later
     const sql = `
       INSERT INTO orders (user_id, total_cost, placed_date, status)
       VALUES      ($1, $2, $3, $4)
-      RETURNING   *`
+      RETURNING   *`;
     //intial order status is pending
     await Db.one<IOrder>(sql, [user_id, total_cost, new Date(), "PENDING"]);
-
-    //TODO STRIPE_SECRET should never be null here
-    const stripe = new Stripe(process.env.STRIPE_SECRET!, 
-      {apiVersion: "2020-08-27", typescript: true});
-
-    const line_items = cart.map(item => {
-      return {
-        price_data: {
-          currency: 'gbp',
-          unit_amount: Math.round(item.price * 10000) / 100,
-          product_data: {
-            name: item.name,
-            description: item.descr,         
-          }
-
-        },
-        quantity: item.quantity
-      }
-    })
-    //stripe session redirects user to pre-hosted payment page
-    const session = await stripe.checkout.sessions.create({
-      line_items,
-      mode: 'payment',
-      success_url: 'https://example.com/success',
-      cancel_url: 'https://example.com/cancel',
-    });
-
-    log(`User ${user_id} Checked Out For Sum ${total_cost}`);
-    log(session.url!);
-
-    //TODO handle this null
-    return session.url!;
+    //log that a user has initiated a payment
+    log(`User ${user_id} Checked Out For Sum £${total_cost}`);
+    //return the url to the stripe payment page
+    return (await stripeSession(cart)).url!;
   }
 }
