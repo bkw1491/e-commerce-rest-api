@@ -1,3 +1,5 @@
+import log from '@utils/logger';
+
 import { Db } from "@config/database";
 import { ICartItem } from "@interfaces/ICartItem";
 import { IOrder } from '@interfaces/IOrder';
@@ -102,7 +104,7 @@ export const CartModel = {
       return {
         price_data: {
           currency: 'gbp',
-          unit_amount: item.price * 100,
+          unit_amount: Math.round(item.price * 10000) / 100,
           product_data: {
             name: item.name,
             description: item.descr,         
@@ -119,6 +121,9 @@ export const CartModel = {
       success_url: 'https://example.com/success',
       cancel_url: 'https://example.com/cancel',
     });
+
+    log(`User ${user_id} Checked Out For Sum ${total_cost}`);
+    log(session.url!);
 
     //TODO handle this null
     return session.url!;
