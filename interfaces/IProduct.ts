@@ -1,6 +1,6 @@
 export interface IProduct {
   id: number,
-  categoryId: number,
+  category_id: number,
   inventory: number,
   name: string,
   descr: string,

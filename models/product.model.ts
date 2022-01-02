@@ -32,7 +32,7 @@ export const ProductModel = {
 
     const { 
       inventory, 
-      categoryId, 
+      category_id, 
       name, 
       descr, 
       price, 
@@ -51,7 +51,7 @@ export const ProductModel = {
       RETURNING   *`
                 
     return await Db.one<IProduct>(sql, [inventory, 
-      categoryId, name, descr, price, imageUrl]);
+      category_id, name, descr, price, imageUrl]);
   },
 
   
@@ -60,7 +60,7 @@ export const ProductModel = {
     const {
       id,
       inventory, 
-      categoryId, 
+      category_id, 
       name, 
       descr, 
       price, 
@@ -79,7 +79,7 @@ export const ProductModel = {
       WHERE     id = $7
       RETURNING *`;
    
-    return await Db.one<IProduct>(sql, [categoryId, 
+    return await Db.one<IProduct>(sql, [category_id, 
       inventory, name, descr, price, imageUrl, id]);
   },
 
