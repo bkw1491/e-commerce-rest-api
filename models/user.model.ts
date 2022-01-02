@@ -37,12 +37,12 @@ export const UserModel = {
 
     const sql = `
     
-      INSERT INTO   users (email, password)
-      VALUES        ($1, $2)
+      INSERT INTO   users (email, password, admin)
+      VALUES        ($1, $2, $3)
       RETURNING     *`;
  
-    //only want to return the id to the user
-    return (await Db.one<IUser>(sql, [email, hashed])).id;
+    //admin defaults false, only want to return the id to the user
+    return (await Db.one<IUser>(sql, [email, hashed, false])).id;
   }
 }
 
