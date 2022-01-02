@@ -1,4 +1,7 @@
-import jwt, { Jwt, Secret } from 'jsonwebtoken';
+import log from '@utils/logger';
+import jwt from 'jsonwebtoken';
+
+import { Jwt, Secret } from 'jsonwebtoken';
 import { IUser } from "@interfaces/IUser";
 
 
@@ -14,9 +17,11 @@ export function issue(user: IUser) : string {
   const options = {
     expiresIn: process.env.JWT_EXPIRY
   }
-  //sign the token with 4hr expiry time
+  //sign the token with expiry time
   const token = 
     jwt.sign(payload, process.env.JWT_SECRET as Secret, options);
+  //log that a user has been authed
+  log(`User ${payload.sub} Was Authenticated`)
   //return the token interpolated with Bearer 
   return `Bearer ${token}`;
 }
