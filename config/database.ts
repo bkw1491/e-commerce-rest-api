@@ -2,31 +2,33 @@ import pg from 'pg'
 import { setupTables } from './tables';
 
 //TODO better way to manage different enviroments?
-function getOptions(env: string) {
-  //options for dev
-  if(env === "development") {
+function getOptions() {
+
+  //options for production
+  if(process.env.NODE_ENV == "production") {
 
     return {
-      max: 20,
-      host: process.env.DATABASE_URL,
-      port: Number(process.env.DATABASE_PORT),
-      user: process.env.DATABASE_USER,
-      password: process.env.DATABASE_PASSWORD, 
-      database: process.env.DATABASE_NAME
+
+      connectionString: process.env.DATABASE_URL,
+      ssl: {
+        rejectUnauthorized: false
+      }
     }
   }
-  //production
-  return {
 
-    connectionString: process.env.DATABASE_URL,
-    ssl: {
-      rejectUnauthorized: false
-    }
+  //dev
+  return {
+    max: 20,
+    host: process.env.DATABASE_URL,
+    port: Number(process.env.DATABASE_PORT),
+    user: process.env.DATABASE_USER,
+    password: process.env.DATABASE_PASSWORD, 
+    database: process.env.DATABASE_NAME
   }
 }
 
 //intialize a new ctn pool using above options
-const pool = new pg.Pool(getOptions(process.env.NODE_ENV));
+const pool = new pg.Pool(getOptions());
 
 
 export const Db = {
