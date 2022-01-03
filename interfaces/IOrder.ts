@@ -1,7 +1,7 @@
 export interface IOrder {
-  id: number,
+  id: string,
   user_id: number,
   total_cost: number,
   placed_date: Date
-  status: "PENDING" | "FAILURE" | "COMPLETE"
+  status: "PENDING" | "FAILURE" | "SUCCESS"
 }
