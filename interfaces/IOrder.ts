@@ -3,5 +3,5 @@ export interface IOrder {
   user_id: number,
   total_cost: number,
   placed_date: Date
-  status: "PENDING" | "COMPLETE"
+  status: "PENDING" | "FAILURE" | "COMPLETE"
 }
