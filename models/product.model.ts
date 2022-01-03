@@ -83,6 +83,22 @@ export const ProductModel = {
       inventory, name, descr, price, imageUrl, id]);
   },
 
+  async updateMany(user_id: number) {
+
+    const sql = `
+    
+      UPDATE product AS p
+      SET p.inventory = p.inventory - c.quantity
+      FROM (
+        SELECT quantity, product_id
+        FROM cart
+        WHERE user_id = $1
+      ) AS c
+      WHERE p.id = c.product_id`
+
+    return await Db.many<IProduct>(sql, [user_id]);
+  },
+
   
   async deleteOne(id: number) {
     
