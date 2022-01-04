@@ -7,5 +7,5 @@ export function errorHandler(err: any, req: Request, res: Response) {
   //log the error to the console
   log(err.message);
   //return error to user
-  res.send(err);
+  res.status(500).send("An Unexpected Error Occurred");
 }
