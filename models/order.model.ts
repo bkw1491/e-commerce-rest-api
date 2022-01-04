@@ -74,7 +74,7 @@ export const OrderModel = {
   async createItems(user_id: number, order_id: string) {
 
     //get cart items, and order id to insert order item
-    //??better way of doing this
+    //TODO a better way of doing this
     const sql = `
     
     WITH items AS (

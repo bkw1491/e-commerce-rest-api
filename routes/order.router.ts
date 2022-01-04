@@ -21,7 +21,6 @@ orderRouter.get("/", verifyJWT("admin"), validateBody(OrderSchema.getOne),
     const order = await OrderModel.findOne(req.body.id);
 
     res.status(200).send(order);
-
   } 
   
   catch (err) {
