@@ -7,7 +7,7 @@ const cart = object({
   id: number(),
   user_id: number(),
   product_id: number(),
-  quantity: number().max(100)
+  quantity: number().min(1).max(100)
 })
 
 
