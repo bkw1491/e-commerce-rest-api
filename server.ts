@@ -7,13 +7,12 @@ import { productRouter } from '@routes/product.router';
 import { categoryRouter } from '@routes/category.router';
 import { cartRouter } from '@routes/cart.router';
 import { orderRouter } from '@routes/order.router';
+import { webhook } from '@middlewares/webhook';
 
 //initlaize express
 const app = express();
-
-//parse incoming requests to json
-//ignores requests that don't have content-type header of 'json'
-app.use(express.json());
+//decices what to parse the req body to
+app.use(webhook);
 
 //register routes
 app.use("/api/", userRouter);
