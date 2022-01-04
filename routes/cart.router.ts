@@ -33,7 +33,7 @@ cartRouter.post("/checkout", verifyJWT("user"),
       //call method from cart model
       const paymentUrl = await CartModel.checkout(req.body.user_id);
 
-      res.redirect(paymentUrl);
+      res.redirect(303, paymentUrl);
     } 
     
     catch (err: unknown) {
@@ -48,7 +48,7 @@ cartRouter.post("/", verifyJWT("user"), validateBody(CartSchema.create),
 
   try {
     //call method from cart model
-    const cart = await CartModel.addItem(req.body);
+    const cart = await CartModel.createOne(req.body);
     //send the cart back in the response
     res.status(200).send(cart);
   } 
@@ -66,7 +66,7 @@ cartRouter.put("/", verifyJWT("user"), validateBody(CartSchema.update),
   try {
 
     //call method from cart model
-    const cart = await CartModel.updateItem(req.body);
+    const cart = await CartModel.updateOne(req.body);
     //send the cart back in the response
     res.status(200).send(cart);    
   } 
@@ -83,7 +83,7 @@ cartRouter.delete("/", verifyJWT("user"), validateBody(CartSchema.delete),
 
   try {
     //call method from cart model
-    const cart = await CartModel.deleteItem(req.body.id);
+    const cart = await CartModel.deleteOne(req.body.id);
     //send the cart back in the response
     res.status(200).send(cart);    
   } 

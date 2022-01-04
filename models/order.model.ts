@@ -1,82 +1,96 @@
 import { Db } from '@config/database';
 import { IOrder } from '@interfaces/IOrder';
-import { ICartItem } from '@interfaces/ICartItem';
 import { IOrderItem } from '@interfaces/IOrderItem';
-import { CartModel } from './cart.model';
 
 
 export const OrderModel = {
 
-  async findOne(id: number) {
+  async findOne(id: string) {
 
     const sql = `
     
     SELECT  *
-    FROM    order o
+    FROM    orders o
     JOIN    order_item oi
     ON      oi.order_id = o.id
     JOIN    product p
-    ON      o.product_id = p.id
+    ON      oi.product_id = p.id
     WHERE   o.id = $1`;
 
     return await Db.one<IOrderItem>(sql, [id]);
   },
 
 
-  async findMany(userId: number) {
+  async findMany(user_id: number) {
 
     const sql = `
 
       SELECT    *
-      FROM      order o
+      FROM      orders o
       JOIN      order_item oi
       ON        oi.order_id = o.id
       JOIN      product p
-      ON        o.product_id = p.id
-      WHERE     oi.user_id = $1
-      GROUP BY  oi.order_id`;
+      ON        oi.product_id = p.id
+      WHERE     o.user_id = $1`;
 
-    return await Db.many<IOrderItem>(sql, [userId]);
+    return await Db.many<IOrderItem>(sql, [user_id]);
   },
 
 
   async createOne(order: IOrder) {
+    //id is the stripe payment_intent id
+    const { id, user_id, total_cost, placed_date, status } = order
 
-    const { id, user_id, total_cost, placed_date } = order;
-    //get the user's cart items
-    //TODO already done in cart.model, can this be passed in from stripe webhook?
-    const cartItems = await CartModel.findMany(order.user_id);
-    //stores array of promises to execute concurrently
-    const queries = [];
-    //first update status of order to complete
     const sql = `
 
-      UPDATE  orders
-      SET     status = "COMPLETED"
-      WHERE   user_ id = $1`;
- 
-    //add promise array
-    queries.push(Db.many(sql, [user_id, total_cost, placed_date]));
+      INSERT INTO orders
+      VALUES      ($1, $2, $3, $4, $5)
+      RETURNING   *`;
 
-    cartItems.map(item => {
-      //update product inventory and add new order item
-      const sql = `
+    await Db.one<IOrder>(sql, [id, user_id, 
+      total_cost, placed_date, status]);
+    //return the order with product info
+    return await this.findOne(id);
+  },
 
-        WITH updated AS (
-          UPDATE product
-          SET inventory = inventory - $3
-          WHERE id = $2
-        )
+  
+  
+  async updateOne(order: Pick<IOrder, "id" | "status">) {
+    
+    const { id, status } = order;
+    
+    const sql = `
+    
+    UPDATE    orders
+    SET       status = $2
+    WHERE     id = $1
+    RETURNING *`;
+    
+    await Db.one<IOrder>(sql, [id, status]);
+    //return the order with product info
+    return await this.findOne(id);
+  },
+  
+  async createItems(user_id: number, order_id: string) {
+
+    //get cart items, and order id to insert order item
+    //??better way of doing this
+    const sql = `
+    
+    WITH items AS (
+      SELECT product_id, quantity, (
+        SELECT id
+        FROM orders
+        WHERE id = $2
+      )
+      FROM cart
+      WHERE user_id = $1
+    )
         
-        INSERT INTO order_item (order_id, product_id, quantity)
-        VALUES      ($1, $2, $3)`;
-
-      //add promise to array
-      return queries.push(Db.one<IOrderItem>(sql, [id, item.product_id, item.quantity]));
-    });
-    //await all to perform concurrently
-    await Promise.all(queries);
-    //must wait for promises to resolve before returning order info
-    return await this.findMany(user_id);
+    INSERT INTO order_item (product_id, quantity, order_id)
+    SELECT * FROM items
+    RETURNING *`;
+        
+    await Db.many<IOrderItem>(sql, [user_id, order_id])
   }
 }

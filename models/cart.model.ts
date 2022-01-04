@@ -2,7 +2,7 @@ import log from '@utils/logger';
 
 import { Db } from "@config/database";
 import { ICartItem } from "@interfaces/ICartItem";
-import { IOrder } from '@interfaces/IOrder';
+import { OrderModel } from '@models/order.model';
 import { stripeSession } from '@utils/stripe';
 
 
@@ -24,7 +24,7 @@ export const CartModel = {
 
     const sql = `
 
-      SELECT c.id, p.name, p.descr, p.price, c.quantity
+      SELECT c.id, c.user_id, p.name, p.descr, p.price, c.quantity
       FROM   cart c 
       JOIN   product p
       ON     c.product_id = p.id
@@ -34,7 +34,7 @@ export const CartModel = {
   },
 
 
-  async addItem(item: Omit<ICartItem, "id">) {
+  async createOne(item: Omit<ICartItem, "id">) {
  
     const {user_id, product_id, quantity} = item
 
@@ -50,7 +50,7 @@ export const CartModel = {
   },
 
 
-  async updateItem(item: ICartItem) {
+  async updateOne(item: ICartItem) {
 
     const {quantity, id } = item;
 
@@ -67,7 +67,7 @@ export const CartModel = {
   },
 
 
-  async deleteItem(id: number) {
+  async deleteOne(id: number) {
 
     const sql = `
 
@@ -81,21 +81,35 @@ export const CartModel = {
   },
 
 
-  async checkout(user_id: number) {
-    //get items in user's cart
-    const cart = await this.findMany(user_id);
-    //get a total cost for all items in user's cart
-    const total_cost = cart.reduce((total, prev) => total + prev.price, 0);
-    //return the inserted row- need to attach id to order items later
+  async deleteMany(user_id: number) {
+
     const sql = `
-      INSERT INTO orders (user_id, total_cost, placed_date, status)
-      VALUES      ($1, $2, $3, $4)
-      RETURNING   *`;
-    //intial order status is pending
-    await Db.one<IOrder>(sql, [user_id, total_cost, new Date(), "PENDING"]);
-    //log that a user has initiated a payment
-    log(`User ${user_id} Checked Out For Sum £${total_cost}`);
+
+      DELETE FROM cart
+      WHERE       cart.user_id = $1
+      RETURNING   *`
+
+    return await Db.many<ICartItem>(sql, [user_id]);
+  },
+
+
+  async checkout(user_id: number) {
+    //get the user's cart
+    const cart = await this.findMany(user_id);
+    //calculate a total cost
+    const total_cost = cart.reduce((total, item) => {
+      return total + item.price;
+    }, 0)
+    //intialize a new payment session
+    const session = await stripeSession(cart);
+    //a user has checked out and has started a payment
+    log(`User ${user_id} Intialized A Payment Intent`);
+    //add order to the database, intially status is pending
+    await OrderModel.createOne({id: session.payment_intent as string, 
+      user_id, total_cost, placed_date: new Date(), status: "PENDING"});
+    //temp for testing
+    console.log(session.url!);
     //return the url to the stripe payment page
-    return (await stripeSession(cart)).url!;
+    return session.url!;
   }
 }
