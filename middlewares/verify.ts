@@ -1,3 +1,6 @@
+import express from 'express';
+
+import { constructEvent } from '@utils/stripe';
 import { verify } from '@utils/token';
 import { Request, Response, NextFunction } from 'express';
 
@@ -20,4 +23,27 @@ export function verifyJWT(protection: "admin" | "user") {
     //next middleware
     next();
   }
+}
+
+
+export function verifyWebhook() {
+
+  return ((req: Request, res: Response, next: NextFunction) => {
+    //get the stripe signature from req header
+    const signature = req.headers['stripe-signature'];
+    //if no signature, return unauthorized
+    if(!signature) { return res.sendStatus(401) }
+    //verify the signature using webhook secret and signature
+    try {
+      //attempt to verify the signature
+      req.body = constructEvent(req.body, signature as string);
+      //return to the router
+      next();
+    }
+
+    catch(err) {
+      //auth failed
+      res.status(401).send(err);
+    }
+  })
 }
