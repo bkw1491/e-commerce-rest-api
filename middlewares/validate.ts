@@ -1,3 +1,5 @@
+import log from '@utils/logger';
+
 import { Request, Response, NextFunction } from 'express';
 import { ZodTypeAny, ZodError } from 'zod';
 
@@ -7,6 +9,7 @@ export function validateBody(schema: ZodTypeAny) {
   return async (req: Request, res: Response, next: NextFunction) => {
 
     try {
+      log(req.body);
       //parse schema async in case validation hits db
       //set req body to the return in case the body is mutated
       req.body = await schema.parseAsync(req.body)
