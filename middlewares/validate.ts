@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { ZodTypeAny } from 'zod';
+import { ZodTypeAny, ZodError } from 'zod';
 
 
 export function validateBody(schema: ZodTypeAny) {
@@ -7,7 +7,7 @@ export function validateBody(schema: ZodTypeAny) {
   return async (req: Request, res: Response, next: NextFunction) => {
 
     try {
-      //parse schmea async in case validation hits db
+      //parse schema async in case validation hits db
       //set req body to the return in case the body is mutated
       req.body = await schema.parseAsync(req.body)
       //move to next middleware if schema passes
@@ -15,8 +15,13 @@ export function validateBody(schema: ZodTypeAny) {
     }
 
     catch(err: unknown){
-
-      res.status(400).send(err);
+      //validation error, parse error
+      if(err instanceof ZodError) {
+        //bad request
+        return res.status(400).send(err.issues)
+      }
+      //some other unexpected error pass to error handler
+      next(err)
     }
   }
 }
@@ -33,8 +38,13 @@ export function validateParams(schema: ZodTypeAny) {
     }
 
     catch(err: unknown){
-
-      res.status(400).send(err);
+      //validation error, parse error
+      if(err instanceof ZodError) {
+        //bad request
+        return res.status(400).send(err.issues)
+      }
+      //some other unexpected error pass to error handler
+      next(err)
     }
   }
 }
