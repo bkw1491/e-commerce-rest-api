@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import log from '@utils/logger';
 
 import { Request, Response } from 'express';
@@ -13,6 +14,7 @@ import { webhook } from '@middlewares/webhook';
 const app = express();
 //decices what to parse the req body to
 app.use(webhook);
+app.use(cors())
 
 //register routes
 app.use("/api/", userRouter);
