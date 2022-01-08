@@ -5,5 +5,5 @@ export interface IProduct {
   name: string,
   descr: string,
   price: number,
-  imageUrl: string
+  image_url: string
 }

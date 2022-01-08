@@ -36,7 +36,7 @@ export const ProductModel = {
       name, 
       descr, 
       price, 
-      imageUrl 
+      image_url 
     } = product
   
     const sql = `
@@ -51,7 +51,7 @@ export const ProductModel = {
       RETURNING   *`
                 
     return await Db.one<IProduct>(sql, [inventory, 
-      category_id, name, descr, price, imageUrl]);
+      category_id, name, descr, price, image_url]);
   },
 
   
@@ -64,7 +64,7 @@ export const ProductModel = {
       name, 
       descr, 
       price, 
-      imageUrl 
+      image_url: imageUrl 
     } = product
   
     const sql = `
