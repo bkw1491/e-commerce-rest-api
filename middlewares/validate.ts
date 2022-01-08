@@ -9,7 +9,7 @@ export function validateBody(schema: ZodTypeAny) {
   return async (req: Request, res: Response, next: NextFunction) => {
 
     try {
-      log(req.body);
+      console.dir(req.body)
       //parse schema async in case validation hits db
       //set req body to the return in case the body is mutated
       req.body = await schema.parseAsync(req.body)
