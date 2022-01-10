@@ -19,8 +19,9 @@ export function validate(schema: ZodTypeAny, method: "params" | "body") {
       if(err instanceof ZodError) {
         //bad request
         const errors = err.issues.map(issue => {
+          //format the error into a readable form 
           return {
-            message: `${issue. path[0]}: ${issue.message}`,
+            message: `${issue.path[0] ? issue.path[0] + " field " : ""}${issue.message.toLowerCase()}`,
           }
         });
         //covert to response obj, with error = true
