@@ -5,6 +5,7 @@ import { Request, Response, NextFunction } from 'express';
 import { CategoryModel } from '@models/category.model';
 import { CategorySchema } from '@schemas/category.schema';
 import { verifyJWT } from '@middlewares/verify';
+import { toResponse } from '@utils/response';
 
 
 export const categoryRouter = express.Router();
@@ -17,7 +18,7 @@ categoryRouter.get("/:id", validate(CategorySchema.get, "params"),
     //returns an array of products filtered by category
     const products = await CategoryModel.findMany(Number(req.params.id));
 
-    res.status(200).send(products);
+    res.status(200).send(toResponse(products));
   } 
 
   catch (err) {
@@ -34,7 +35,7 @@ categoryRouter.post("/", verifyJWT("admin"), validate(CategorySchema.create, "bo
     //call method from product controller
     const newCategory = await CategoryModel.createOne(req.body.name);
     //send the created category back
-    res.status(201).send(newCategory);
+    res.status(201).send(toResponse(newCategory));
   } 
   
   catch (err) {
@@ -51,7 +52,7 @@ categoryRouter.put("/", verifyJWT("admin"), validate(CategorySchema.update, "bod
 
     const updatedCategory = await CategoryModel.updateOne(req.body);
 
-    res.status(200).send(updatedCategory);
+    res.status(200).send(toResponse(updatedCategory));
   } 
   
   catch (err) {
@@ -68,7 +69,7 @@ categoryRouter.delete("/", verifyJWT("admin"), validate(CategorySchema.delete, "
 
     const deletedCategory = await CategoryModel.deleteOne(req.body.id);
 
-    res.status(200).send(deletedCategory);
+    res.status(200).send(toResponse(deletedCategory));
   } 
   
   catch (err) {

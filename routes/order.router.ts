@@ -8,6 +8,7 @@ import { validate } from '@middlewares/validate';
 import { OrderSchema } from '@schemas/order.schema';
 import { ProductModel } from '@models/product.model';
 import { CartModel } from '@models/cart.model';
+import { toResponse } from '@utils/response';
 
 
 export const orderRouter = express.Router();
@@ -37,7 +38,7 @@ orderRouter.get("/myorders", verifyJWT("user"), validate(OrderSchema.getMany, "b
 
     const order = await OrderModel.findMany(req.body.user_id);
 
-    res.status(200).send(order);
+    res.status(200).send(toResponse(order));
   } 
   
   catch (err) {

@@ -1,3 +1,4 @@
+import { toResponse } from '@utils/response';
 import { Request, Response, NextFunction } from 'express';
 import { ZodTypeAny, ZodError } from 'zod';
 
@@ -19,14 +20,14 @@ export function validate(schema: ZodTypeAny, method: "params" | "body") {
         //bad request
         const errors = err.issues.map(issue => {
           return {
-            code: issue.code,
             message: `${issue. path[0]}: ${issue.message}`,
           }
-        })
-        return res.status(400).send(errors)
+        });
+        //covert to response obj, with error = true
+        return res.status(400).send(toResponse(errors, true))
       }
       //some other unexpected error pass to error handler
-      next(err)
+      next(err);
     }
   } 
 }

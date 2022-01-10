@@ -5,6 +5,7 @@ import { validate } from '@middlewares/validate';
 import { CartSchema } from '@schemas/cart.schema';
 import { CartModel } from '@models/cart.model';
 import { verifyJWT } from '@middlewares/verify';
+import { toResponse } from '@utils/response';
 
 
 export const cartRouter = express.Router();
@@ -16,7 +17,7 @@ async (req: Request, res: Response, next: NextFunction) => {
     //call method from cart model
     const cart = await CartModel.findMany(req.body.user_id);
     //send cart back to the user
-    res.status(200).send(cart)
+    res.status(200).send(toResponse(cart))
   } 
   
   catch (err) {
@@ -50,7 +51,7 @@ cartRouter.post("/", verifyJWT("user"), validate(CartSchema.create, "body"),
     //call method from cart model
     const cart = await CartModel.createOne(req.body);
     //send the cart back in the response
-    res.status(200).send(cart);
+    res.status(200).send(toResponse(cart));
   } 
   
   catch (err) {
@@ -68,7 +69,7 @@ cartRouter.put("/", verifyJWT("user"), validate(CartSchema.update, "body"),
     //call method from cart model
     const cart = await CartModel.updateOne(req.body);
     //send the cart back in the response
-    res.status(200).send(cart);    
+    res.status(200).send(toResponse(cart));    
   } 
   
   catch (err) {
@@ -85,7 +86,7 @@ cartRouter.delete("/", verifyJWT("user"), validate(CartSchema.delete, "body"),
     //call method from cart model
     const cart = await CartModel.deleteOne(req.body.id);
     //send the cart back in the response
-    res.status(200).send(cart);    
+    res.status(200).send(toResponse(cart));    
   } 
   
   catch (err) {

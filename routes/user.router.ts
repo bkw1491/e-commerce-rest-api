@@ -5,6 +5,7 @@ import { Request, Response, NextFunction} from 'express';
 import { UserSchema } from '@schemas/user.schema';
 import { UserModel } from '@models/user.model';
 import { issue } from '@utils/token';
+import { toResponse } from '@utils/response';
 
 //intialize user router
 export const userRouter = express.Router();
@@ -15,9 +16,9 @@ userRouter.post("/register", validate(UserSchema.register, "body"),
 
   try {
     //call method from user model
-    await UserModel.createOne(req.body);
+    const newUser = await UserModel.createOne(req.body);
     //send the response
-    res.sendStatus(200);
+    res.status(201).send(toResponse(newUser));
   }
 
   catch(err: unknown) {
@@ -31,10 +32,10 @@ userRouter.post("/auth", validate(UserSchema.auth, "body"),
   async (req: Request, res: Response, next: NextFunction) => {
   
   try {
-    //call method from user model
+    //call method from util
     const token = issue(req.body)
     //send the token in the response
-    res.status(200).send(token);
+    res.status(200).send(toResponse(token));
   }
 
   catch(err: unknown) {
