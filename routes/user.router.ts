@@ -1,5 +1,5 @@
 import express from 'express';
-import { validateBody } from '@middlewares/validate';
+import { validate } from '@middlewares/validate';
 
 import { Request, Response, NextFunction} from 'express';
 import { UserSchema } from '@schemas/user.schema';
@@ -10,7 +10,7 @@ import { issue } from '@utils/token';
 export const userRouter = express.Router();
 
 
-userRouter.post("/register", validateBody(UserSchema.register), 
+userRouter.post("/register", validate(UserSchema.register, "body"), 
   async (req: Request, res: Response, next: NextFunction) => {
 
   try {
@@ -27,7 +27,7 @@ userRouter.post("/register", validateBody(UserSchema.register),
 });
 
 
-userRouter.post("/auth", validateBody(UserSchema.auth), 
+userRouter.post("/auth", validate(UserSchema.auth, "body"), 
   async (req: Request, res: Response, next: NextFunction) => {
   
   try {

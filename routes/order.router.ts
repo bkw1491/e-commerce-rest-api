@@ -4,7 +4,7 @@ import log from '@utils/logger';
 import { Request, Response, NextFunction } from 'express';
 import { OrderModel } from '@models/order.model';
 import { verifyJWT, verifyWebhook } from '@middlewares/verify';
-import { validateBody } from '@middlewares/validate';
+import { validate } from '@middlewares/validate';
 import { OrderSchema } from '@schemas/order.schema';
 import { ProductModel } from '@models/product.model';
 import { CartModel } from '@models/cart.model';
@@ -13,7 +13,7 @@ import { CartModel } from '@models/cart.model';
 export const orderRouter = express.Router();
 
 
-orderRouter.get("/", verifyJWT("admin"), validateBody(OrderSchema.getOne), 
+orderRouter.get("/", verifyJWT("admin"), validate(OrderSchema.getOne, "body"), 
   async (req: Request, res: Response, next: NextFunction) => {
 
   try {
@@ -30,7 +30,7 @@ orderRouter.get("/", verifyJWT("admin"), validateBody(OrderSchema.getOne),
 });
 
 
-orderRouter.get("/myorders", verifyJWT("user"), validateBody(OrderSchema.getMany), 
+orderRouter.get("/myorders", verifyJWT("user"), validate(OrderSchema.getMany, "body"), 
   async (req: Request, res: Response, next: NextFunction) => {
 
   try {

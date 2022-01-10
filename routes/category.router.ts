@@ -1,5 +1,5 @@
 import express from 'express';
-import { validateBody, validateParams } from '@middlewares/validate';
+import { validate } from '@middlewares/validate';
 
 import { Request, Response, NextFunction } from 'express';
 import { CategoryModel } from '@models/category.model';
@@ -10,7 +10,7 @@ import { verifyJWT } from '@middlewares/verify';
 export const categoryRouter = express.Router();
 
 
-categoryRouter.get("/:id", validateParams(CategorySchema.get),
+categoryRouter.get("/:id", validate(CategorySchema.get, "params"),
   async (req: Request, res: Response, next: NextFunction) => {
 
   try {
@@ -27,7 +27,7 @@ categoryRouter.get("/:id", validateParams(CategorySchema.get),
 })
 
 
-categoryRouter.post("/", verifyJWT("admin"), validateBody(CategorySchema.create),
+categoryRouter.post("/", verifyJWT("admin"), validate(CategorySchema.create, "body"),
   async (req: Request, res: Response, next: NextFunction) => {
 
   try {
@@ -44,7 +44,7 @@ categoryRouter.post("/", verifyJWT("admin"), validateBody(CategorySchema.create)
 })
 
 
-categoryRouter.put("/", verifyJWT("admin"), validateBody(CategorySchema.update),
+categoryRouter.put("/", verifyJWT("admin"), validate(CategorySchema.update, "body"),
   async (req: Request, res: Response, next: NextFunction) => {
 
   try {
@@ -61,7 +61,7 @@ categoryRouter.put("/", verifyJWT("admin"), validateBody(CategorySchema.update),
 })
 
 
-categoryRouter.delete("/", verifyJWT("admin"), validateBody(CategorySchema.delete),
+categoryRouter.delete("/", verifyJWT("admin"), validate(CategorySchema.delete, "body"),
   async (req: Request, res: Response, next: NextFunction) => {
 
   try {

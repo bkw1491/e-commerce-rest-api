@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { validateBody, validateParams } from '@middlewares/validate';
+import { validate } from '@middlewares/validate';
 import { ProductSchema } from '@schemas/product.schema';
 import { Request, Response, NextFunction } from 'express';
 import { ProductModel } from '@models/product.model';
@@ -27,7 +27,7 @@ productRouter.get("/", async (req: Request, res: Response, next: NextFunction) =
 
 
 
-productRouter.get("/:id", validateParams(ProductSchema.get), 
+productRouter.get("/:id", validate(ProductSchema.get, "params"), 
 async (req: Request, res: Response, next: NextFunction) => {
   
   try {
@@ -44,7 +44,7 @@ async (req: Request, res: Response, next: NextFunction) => {
 })
 
 
-productRouter.post("/", verifyJWT("admin"), validateBody(ProductSchema.create), 
+productRouter.post("/", verifyJWT("admin"), validate(ProductSchema.create, "body"), 
   async (req: Request, res: Response, next: NextFunction) => {
 
   try {
@@ -62,7 +62,7 @@ productRouter.post("/", verifyJWT("admin"), validateBody(ProductSchema.create),
 })
 
 
-productRouter.put("/", verifyJWT("admin"), validateBody(ProductSchema.update), 
+productRouter.put("/", verifyJWT("admin"), validate(ProductSchema.update, "body"), 
   async (req: Request, res: Response, next: NextFunction) => {
 
   try {
@@ -80,7 +80,7 @@ productRouter.put("/", verifyJWT("admin"), validateBody(ProductSchema.update),
 })
 
 
-productRouter.delete("/", verifyJWT("admin"), validateBody(ProductSchema.delete), 
+productRouter.delete("/", verifyJWT("admin"), validate(ProductSchema.delete, "body"), 
   async(req: Request, res: Response, next: NextFunction) => {
 
   try {
