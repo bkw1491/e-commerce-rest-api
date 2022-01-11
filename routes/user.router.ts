@@ -34,6 +34,8 @@ userRouter.post("/auth", validate(UserSchema.auth, "body"),
   try {
     //call method from util
     const token = issue(req.body)
+    //set the token on the auth header
+    res.setHeader("authorization", token);
     //send the token in the response
     res.status(200).send(toResponse(token));
   }
