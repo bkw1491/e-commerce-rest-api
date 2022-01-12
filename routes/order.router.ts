@@ -21,7 +21,7 @@ orderRouter.get("/", verifyJWT("admin"), validate(OrderSchema.getOne, "body"),
 
     const order = await OrderModel.findOne(req.body.id);
 
-    res.status(200).send(order);
+    res.status(200).send(toResponse(order));
   } 
   
   catch (err) {
@@ -36,9 +36,9 @@ orderRouter.get("/myorders", verifyJWT("user"), validate(OrderSchema.getMany, "b
 
   try {
 
-    const order = await OrderModel.findMany(req.body.user_id);
+    const orders = await OrderModel.findMany(req.body.user_id);
 
-    res.status(200).send(toResponse(order));
+    res.status(200).send(toResponse(orders));
   } 
   
   catch (err) {
@@ -74,8 +74,8 @@ orderRouter.post("/webhook",
       //remove items from cart, returns removed rows
       await CartModel.deleteMany(user_id);
     }
-    //webhook handled
-    res.sendStatus(200);
+
+    res.status(200).send(toResponse("webhook handled"));
   }
   
   catch (err) {
