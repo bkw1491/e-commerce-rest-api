@@ -32,12 +32,14 @@ userRouter.post("/auth", validate(UserSchema.auth, "body"),
   async (req: Request, res: Response, next: NextFunction) => {
   
   try {
-    //call method from util
+    //call method from util to create a json web token
     const token = issue(req.body)
-    //set the token on the auth header
-    res.setHeader("authorization", token);
-    //send the token in the response
-    res.status(200).send(toResponse(token));
+    //http only prevents client-side javascript from accessing the cookie
+    //no sensitive info is stored in the cookie anyway
+    //TODO convert .env JWT_EXPIRY string to number to use here in maxAge
+    res.cookie("auth", token, { maxAge: 14400, httpOnly: true });
+    //got here so everything ok
+    res.sendStatus(200);
   }
 
   catch(err: unknown) {
