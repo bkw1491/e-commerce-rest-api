@@ -4,19 +4,19 @@ import { IProduct } from '@interfaces/IProduct';
 
 
 export const CategoryModel = {
-
-  async findOne(id: number) {
   
+
+  async findAll() {
+
     const sql = `
-
-      SELECT *
-      FROM   category
-      WHERE  id = $1`;
-  
-    return await Db.one<ICategory>(sql, [id]);
+    
+      SELECT * 
+      FROM   category`;
+    
+    return await Db.one<ICategory[]>(sql);
   },
 
-
+  
   async findMany(categoryId: number) {
 
     const sql = `
@@ -29,7 +29,19 @@ export const CategoryModel = {
     
     return await Db.one<IProduct>(sql, [categoryId]);
   },
+
+
+  async findOne(id: number) {
   
+    const sql = `
+
+      SELECT *
+      FROM   category
+      WHERE  id = $1`;
+  
+    return await Db.one<ICategory>(sql, [id]);
+  },
+
   
   async createOne(name: string) {
 

@@ -11,6 +11,23 @@ import { toResponse } from '@utils/response';
 export const categoryRouter = express.Router();
 
 
+categoryRouter.get("/",
+  async (req: Request, res: Response, next: NextFunction) => {
+
+  try {
+    //returns an array of all categories
+    const categories = await CategoryModel.findAll();
+
+    res.status(200).send(toResponse(categories));
+  } 
+
+  catch (err) {
+    
+    next(err);
+  }
+})
+
+
 categoryRouter.get("/:id", validate(CategorySchema.get, "params"),
   async (req: Request, res: Response, next: NextFunction) => {
 
