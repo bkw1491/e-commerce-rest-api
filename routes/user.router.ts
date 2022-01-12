@@ -38,7 +38,7 @@ userRouter.post("/auth", validate(UserSchema.auth, "body"),
     //no sensitive info is stored in the cookie anyway
     //TODO convert .env JWT_EXPIRY string to number to use here in maxAge
     res.cookie("auth", token, { maxAge: 14400, httpOnly: true });
-    //got here so everything ok, have to send something back
+    //got here so everything ok
     res.status(200).send(toResponse("login success"));
   }
 
