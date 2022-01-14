@@ -14,8 +14,9 @@ import { webhook } from '@middlewares/webhook';
 //initlaize express
 const app = express();
 //decices what to parse the req body to
-app.use(cookieParser())
-app.use(cors())
+app.use(cookieParser());
+//adds the Access-Control-Allow-Credentials header to req
+app.use(cors({credentials: true}))
 app.use(webhook);
 
 //register routes
