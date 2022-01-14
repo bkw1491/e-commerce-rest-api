@@ -22,7 +22,7 @@ userRouter.post("/register", validate(UserSchema.register),
   }
 
   catch(err: unknown) {
-    //pass to error handling middleware
+
     next(err)
   }
 });
