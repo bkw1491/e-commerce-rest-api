@@ -7,7 +7,6 @@ import { Request, Response, NextFunction } from 'express';
 export function verifyJWT(protection: "admin" | "user") {
   //?? make response middleware
   return (req: Request, res: Response, next: NextFunction) => {
-    console.log(req.cookies);
     //return unauthorized if auth cookie not provided
     if(!req.cookies.auth) {
       return res.status(401).send(toError("token not provided"))
@@ -21,7 +20,6 @@ export function verifyJWT(protection: "admin" | "user") {
     //if the route requires admin and user not admin return 401
     if(protection === "admin") {
       if(!token.payload.admin) {
-        console.log(token.payload);
         return res.status(401).send(toError("protected route"))
       }
     }
