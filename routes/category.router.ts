@@ -28,7 +28,7 @@ categoryRouter.get("/all",
 })
 
 
-categoryRouter.get("/", validate(CategorySchema.get),
+categoryRouter.post("/", validate(CategorySchema.get),
   async (req: Request, res: Response, next: NextFunction) => {
 
   try {
@@ -45,7 +45,7 @@ categoryRouter.get("/", validate(CategorySchema.get),
 })
 
 
-categoryRouter.post("/", verifyJWT("admin"), validate(CategorySchema.create),
+categoryRouter.post("/new", verifyJWT("admin"), validate(CategorySchema.create),
   async (req: Request, res: Response, next: NextFunction) => {
 
   try {

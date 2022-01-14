@@ -28,7 +28,7 @@ productRouter.get("/all", async (req: Request, res: Response, next: NextFunction
 
 
 
-productRouter.get("/", validate(ProductSchema.get), 
+productRouter.post("/", validate(ProductSchema.get), 
 async (req: Request, res: Response, next: NextFunction) => {
   
   try {
@@ -45,7 +45,7 @@ async (req: Request, res: Response, next: NextFunction) => {
 })
 
 
-productRouter.post("/", verifyJWT("admin"), validate(ProductSchema.create), 
+productRouter.post("/new", verifyJWT("admin"), validate(ProductSchema.create), 
   async (req: Request, res: Response, next: NextFunction) => {
 
   try {
