@@ -42,6 +42,7 @@ userRouter.post("/auth", validate(UserSchema.auth),
       expires: new Date(Date.now() + (24 * 3600 * 1000)),
       httpOnly: true,
       secure: true,
+      sameSite: 'none',
     });
     res.status(200).send(toResponse("login success"));
   }
