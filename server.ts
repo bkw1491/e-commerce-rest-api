@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { json } from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import log from '@utils/logger';
@@ -16,6 +16,7 @@ const app = express();
 //attackers can use this header to detect apps running Express
 app.disable('x-powered-by');
 app.use(cookieParser());
+
 //adds the Access-Control-Allow-Credentials header to req
 //TODO this will change for production
 app.use(cors({origin: 'http://localhost:3000', credentials: true}))
