@@ -15,7 +15,8 @@ const product = object({
     refine(async id => await CategoryModel.findOne(id), 
       {message: "category does not exist"}),
   inventory:
-      number().min(0),
+    number().
+    min(0),
   name: 
     string().
     max(255),
@@ -23,21 +24,19 @@ const product = object({
     string().
     max(255),
   price: 
-    number().min(0),
+    number().
+    min(0),
   image_url: 
-    optional(
-      string().
-      url())
+    string().
+    url(),
+  image_alt: 
+    string().
+    max(255)
 })
 
 export const ProductSchema = {
   
-  get: object({
-    //schema rejects if param is not a number
-    id: string().refine(value => !isNaN(Number(value)),
-    {message: "product does not exist"})
-  }),
-  
+  get: product.pick({id: true}),
   create: product.omit({id: true}),
   update: product,
   delete: product.pick({id: true})

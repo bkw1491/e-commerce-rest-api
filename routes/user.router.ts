@@ -1,7 +1,7 @@
 import express from 'express';
-import { validate } from '@middlewares/validate';
 
 import { Request, Response, NextFunction} from 'express';
+import { validate } from '@middlewares/validate';
 import { UserSchema } from '@schemas/user.schema';
 import { UserModel } from '@models/user.model';
 import { issue } from '@utils/token';
@@ -11,7 +11,7 @@ import { toResponse } from '@utils/response';
 export const userRouter = express.Router();
 
 
-userRouter.post("/register", validate(UserSchema.register, "body"), 
+userRouter.post("/register", validate(UserSchema.register), 
   async (req: Request, res: Response, next: NextFunction) => {
 
   try {
@@ -28,7 +28,7 @@ userRouter.post("/register", validate(UserSchema.register, "body"),
 });
 
 
-userRouter.post("/auth", validate(UserSchema.auth, "body"), 
+userRouter.post("/auth", validate(UserSchema.auth), 
   async (req: Request, res: Response, next: NextFunction) => {
   
   try {
@@ -37,8 +37,9 @@ userRouter.post("/auth", validate(UserSchema.auth, "body"),
     //http only prevents client-side javascript from accessing the cookie
     //no sensitive info is stored in the cookie anyway
     //TODO convert .env JWT_EXPIRY string to number to use here in maxAge
-    res.cookie("auth", token, { maxAge: 14400, httpOnly: true });
-    //got here so everything ok
+    const options = { expires: new Date(Date.now() + (24 * 3600 * 1000)), httpOnly: true }
+    //set the cookie on the response
+    res.cookie("auth", token, options);
     res.status(200).send(toResponse("login success"));
   }
 

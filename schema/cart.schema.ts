@@ -1,6 +1,6 @@
 import { CartModel } from '@models/cart.model';
 import { ProductModel } from '@models/product.model';
-import {object, number } from 'zod';
+import { object, number } from 'zod';
 
 
 const cart = object({

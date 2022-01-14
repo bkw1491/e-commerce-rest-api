@@ -10,7 +10,7 @@ import { toResponse } from '@utils/response';
 
 export const cartRouter = express.Router();
 
-cartRouter.get("/", verifyJWT("user"), validate(CartSchema.get, "body"),
+cartRouter.get("/", verifyJWT("user"), validate(CartSchema.get),
 async (req: Request, res: Response, next: NextFunction) => {
   
   try {
@@ -44,7 +44,7 @@ cartRouter.post("/checkout", verifyJWT("user"),
 })
 
 
-cartRouter.post("/", verifyJWT("user"), validate(CartSchema.create, "body"),
+cartRouter.post("/", verifyJWT("user"), validate(CartSchema.create),
   async (req: Request, res: Response, next: NextFunction) => {
 
   try {
@@ -61,7 +61,7 @@ cartRouter.post("/", verifyJWT("user"), validate(CartSchema.create, "body"),
 })
 
 
-cartRouter.put("/", verifyJWT("user"), validate(CartSchema.update, "body"),
+cartRouter.put("/", verifyJWT("user"), validate(CartSchema.update),
   async (req: Request, res: Response, next: NextFunction) => {
 
   try {
@@ -79,7 +79,7 @@ cartRouter.put("/", verifyJWT("user"), validate(CartSchema.update, "body"),
 })
 
 
-cartRouter.delete("/", verifyJWT("user"), validate(CartSchema.delete, "body"),
+cartRouter.delete("/", verifyJWT("user"), validate(CartSchema.delete),
   async (req: Request, res: Response, next: NextFunction) => {
 
   try {

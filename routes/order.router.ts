@@ -14,7 +14,7 @@ import { toResponse } from '@utils/response';
 export const orderRouter = express.Router();
 
 
-orderRouter.get("/", verifyJWT("admin"), validate(OrderSchema.getOne, "body"), 
+orderRouter.get("/", verifyJWT("admin"), validate(OrderSchema.getOne), 
   async (req: Request, res: Response, next: NextFunction) => {
 
   try {
@@ -31,7 +31,7 @@ orderRouter.get("/", verifyJWT("admin"), validate(OrderSchema.getOne, "body"),
 });
 
 
-orderRouter.get("/myorders", verifyJWT("user"), validate(OrderSchema.getMany, "body"), 
+orderRouter.get("/myorders", verifyJWT("user"), validate(OrderSchema.getMany), 
   async (req: Request, res: Response, next: NextFunction) => {
 
   try {
