@@ -5,23 +5,24 @@ import { Request, Response, NextFunction } from 'express';
 
 
 export function verifyJWT(protection: "admin" | "user") {
-  //TODO clean up toError() repeated code
   //?? make response middleware
   return (req: Request, res: Response, next: NextFunction) => {
+    console.log(req.cookies);
     //return unauthorized if auth cookie not provided
-    if(!req.cookies.auth) { 
-      return res.status(401).send(toError("unauthorized"))
+    if(!req.cookies.auth) {
+      return res.status(401).send(toError("token not provided"))
     }
     //verify the token, returns extracted token if valid
     const token = verify(req.cookies.auth!)
     //send 401 if token verification fails
     if(!token) {
-       return res.status(401).send(toError("unauthorized")) 
+       return res.status(401).send(toError("token invalid")) 
     }
     //if the route requires admin and user not admin return 401
     if(protection === "admin") {
-      if(!token.payload.admin) { 
-        return res.status(401).send(toError("unauthorized"))
+      if(!token.payload.admin) {
+        console.log(token.payload);
+        return res.status(401).send(toError("protected route"))
       }
     }
     //atatch user_id to req body, makes life easier later on
