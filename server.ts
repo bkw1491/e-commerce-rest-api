@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import log from '@utils/logger';
 
 import { Request, Response } from 'express';
@@ -13,8 +14,9 @@ import { webhook } from '@middlewares/webhook';
 //initlaize express
 const app = express();
 //decices what to parse the req body to
-app.use(webhook);
+app.use(cookieParser())
 app.use(cors())
+app.use(webhook);
 
 //register routes
 app.use("/api/", userRouter);
