@@ -37,7 +37,7 @@ userRouter.post("/auth", validate(UserSchema.auth),
     //http only prevents client-side javascript from accessing the cookie
     //no sensitive info is stored in the cookie anyway
     //TODO convert .env JWT_EXPIRY string to number to use here in maxAge
-    const options = { expires: new Date(Date.now() + (24 * 3600 * 1000)), httpOnly: true }
+    const options = { expires: new Date(Date.now() + (24 * 3600 * 1000))}
     //set the cookie on the response
     res.cookie("auth", token, options);
     res.status(200).send(toResponse("login success"));
