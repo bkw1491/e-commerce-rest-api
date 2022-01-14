@@ -13,10 +13,13 @@ import { webhook } from '@middlewares/webhook';
 
 //initlaize express
 const app = express();
-//decices what to parse the req body to
+//attackers can use this header to detect apps running Express
+app.disable('x-powered-by');
 app.use(cookieParser());
 //adds the Access-Control-Allow-Credentials header to req
-app.use(cors({credentials: true}))
+//TODO this will change for production
+app.use(cors({origin: 'http://localhost:3000', credentials: true}))
+//decides what to parse the req body to
 app.use(webhook);
 
 //register routes
