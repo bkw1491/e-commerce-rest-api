@@ -23,7 +23,7 @@ const product = object({
     string().
     max(255),
   price: 
-    number(),
+    number().min(0),
   image_url: 
     optional(
       string().

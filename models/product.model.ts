@@ -36,7 +36,8 @@ export const ProductModel = {
       name, 
       descr, 
       price, 
-      image_url 
+      image_url,
+      image_alt
     } = product
   
     const sql = `
@@ -46,12 +47,13 @@ export const ProductModel = {
                           name, 
                           descr, 
                           price, 
-                          image_url)
+                          image_url,
+                          image_alt)
       VALUES      ($1, $2, $3, $4, $5, $6)
       RETURNING   *`
                 
-    return await Db.one<IProduct>(sql, [inventory, 
-      category_id, name, descr, price, image_url]);
+    return await Db.one<IProduct>(sql, [inventory,category_id, 
+      name, descr, price, image_url, image_alt]);
   },
 
   
@@ -64,7 +66,8 @@ export const ProductModel = {
       name, 
       descr, 
       price, 
-      image_url: imageUrl 
+      image_url,
+      image_alt
     } = product
   
     const sql = `
@@ -76,13 +79,15 @@ export const ProductModel = {
                 descr = $4, 
                 price = $5, 
                 image_url = $6
-      WHERE     id = $7
+                image_alt = $7
+      WHERE     id = $8
       RETURNING *`;
    
     return await Db.one<IProduct>(sql, [category_id, 
-      inventory, name, descr, price, imageUrl, id]);
+      inventory, name, descr, price, image_url, image_alt, id]);
   },
 
+  
   async updateMany(user_id: number) {
 
     const sql = `

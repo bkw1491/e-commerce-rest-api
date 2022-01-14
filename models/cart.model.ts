@@ -19,12 +19,13 @@ export const CartModel = {
     return await Db.one<ICartItem>(sql, [id]);
   },
   
-
+  
   async findMany(user_id: number) {
 
     const sql = `
 
-      SELECT c.id, c.user_id, p.name, p.descr, p.price, c.quantity
+      SELECT c.id, c.user_id, c.quantity, 
+             p.name, p.descr, p.price, p.image_url, p.image_alt    
       FROM   cart c 
       JOIN   product p
       ON     c.product_id = p.id
