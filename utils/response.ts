@@ -1,9 +1,9 @@
 //returns a obj with res and no error
-export function toResponse(res: any) {
+export function toResponse(data: any) {
 
   return {
     sent: new Date(),
-    res,
+    data,
     error: null
   }
 }
@@ -13,7 +13,7 @@ export function toError(msg: string | string[]) {
 
   return {
     sent: new Date(),
-    res: null,
+    data: null,
     error: msg
   }
 }
