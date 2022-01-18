@@ -11,7 +11,7 @@ import { toResponse } from '@utils/response';
 export const categoryRouter = express.Router();
 
 
-categoryRouter.get("/all",
+categoryRouter.get("/",
   async (req: Request, res: Response, next: NextFunction) => {
 
   try {
@@ -28,12 +28,12 @@ categoryRouter.get("/all",
 })
 
 
-categoryRouter.post("/", validate(CategorySchema.get),
+categoryRouter.get("/:id", validate(CategorySchema.get, "params"),
   async (req: Request, res: Response, next: NextFunction) => {
 
   try {
     //returns an array of products filtered by category
-    const products = await CategoryModel.findMany(req.body.id);
+    const products = await CategoryModel.findMany(Number(req.params.id));
 
     res.status(200).send(toResponse(products));
   } 
@@ -45,7 +45,7 @@ categoryRouter.post("/", validate(CategorySchema.get),
 })
 
 
-categoryRouter.post("/new", verifyJWT("admin"), validate(CategorySchema.create),
+categoryRouter.post("/", verifyJWT("admin"), validate(CategorySchema.create, "body"),
   async (req: Request, res: Response, next: NextFunction) => {
 
   try {
@@ -62,7 +62,7 @@ categoryRouter.post("/new", verifyJWT("admin"), validate(CategorySchema.create),
 })
 
 
-categoryRouter.put("/", verifyJWT("admin"), validate(CategorySchema.update),
+categoryRouter.put("/", verifyJWT("admin"), validate(CategorySchema.update, "body"),
   async (req: Request, res: Response, next: NextFunction) => {
 
   try {
@@ -79,7 +79,7 @@ categoryRouter.put("/", verifyJWT("admin"), validate(CategorySchema.update),
 })
 
 
-categoryRouter.delete("/", verifyJWT("admin"), validate(CategorySchema.delete),
+categoryRouter.delete("/", verifyJWT("admin"), validate(CategorySchema.delete, "body"),
   async (req: Request, res: Response, next: NextFunction) => {
 
   try {

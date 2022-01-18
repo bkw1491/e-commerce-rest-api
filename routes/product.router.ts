@@ -11,7 +11,7 @@ import { toResponse } from '@utils/response';
 export const productRouter = express.Router();
 
 
-productRouter.get("/all", async (req: Request, res: Response, next: NextFunction) => {
+productRouter.get("/", async (req: Request, res: Response, next: NextFunction) => {
 
   try {
     //call method from product model
@@ -28,12 +28,12 @@ productRouter.get("/all", async (req: Request, res: Response, next: NextFunction
 
 
 
-productRouter.post("/", validate(ProductSchema.get), 
+productRouter.get("/:id", validate(ProductSchema.get, "params"), 
 async (req: Request, res: Response, next: NextFunction) => {
   
   try {
     //call method from product model
-    const product = await ProductModel.findOne(req.body.id);
+    const product = await ProductModel.findOne(Number(req.params.id));
     //return the product
     res.status(200).send(toResponse(product));
   } 
@@ -45,7 +45,7 @@ async (req: Request, res: Response, next: NextFunction) => {
 })
 
 
-productRouter.post("/new", verifyJWT("admin"), validate(ProductSchema.create), 
+productRouter.post("/", verifyJWT("admin"), validate(ProductSchema.create, "body"), 
   async (req: Request, res: Response, next: NextFunction) => {
 
   try {
@@ -63,7 +63,7 @@ productRouter.post("/new", verifyJWT("admin"), validate(ProductSchema.create),
 })
 
 
-productRouter.put("/", verifyJWT("admin"), validate(ProductSchema.update), 
+productRouter.put("/", verifyJWT("admin"), validate(ProductSchema.update, "body"), 
   async (req: Request, res: Response, next: NextFunction) => {
 
   try {
@@ -81,7 +81,7 @@ productRouter.put("/", verifyJWT("admin"), validate(ProductSchema.update),
 })
 
 
-productRouter.delete("/", verifyJWT("admin"), validate(ProductSchema.delete), 
+productRouter.delete("/", verifyJWT("admin"), validate(ProductSchema.delete, "body"), 
   async(req: Request, res: Response, next: NextFunction) => {
 
   try {

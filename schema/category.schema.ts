@@ -15,7 +15,16 @@ const category = object({
 
 export const CategorySchema = {
 
-  get: category.pick({id: true}),
+  get: object({
+    id: string().refine(async value => {
+      //if the param is not a number, schema rejects
+      if(isNaN(Number(value))) { return false }
+      //category does not exist, schema rejects
+      if(!await CategoryModel.findOne(Number(value))) { return false }
+      //otherwise schema passed
+      return true
+    }, {message: "category does not exist"})
+  }),
   create: category.pick({name: true}),
   update: category.pick({id: true, name: true}),
   delete: category.pick({id: true})

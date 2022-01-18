@@ -11,7 +11,7 @@ import { toResponse } from '@utils/response';
 export const userRouter = express.Router();
 
 
-userRouter.post("/register", validate(UserSchema.register), 
+userRouter.post("/register", validate(UserSchema.register, "body"), 
   async (req: Request, res: Response, next: NextFunction) => {
 
   try {
@@ -28,7 +28,7 @@ userRouter.post("/register", validate(UserSchema.register),
 });
 
 
-userRouter.post("/auth", validate(UserSchema.auth), 
+userRouter.post("/auth", validate(UserSchema.auth, "body"), 
   async (req: Request, res: Response, next: NextFunction) => {
   
   try {
