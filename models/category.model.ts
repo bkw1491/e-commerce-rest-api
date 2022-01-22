@@ -11,7 +11,7 @@ export const CategoryModel = {
       SELECT * 
       FROM   category`;
     
-    return await Db.one<ICategory[]>(sql);
+    return await Db.many<ICategory[]>(sql);
   },
 
 
