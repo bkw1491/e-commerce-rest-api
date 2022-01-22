@@ -6,7 +6,7 @@ const category = object({
 
   id: 
     number().
-    refine(async id => await CategoryModel.findOne(id), 
+    refine(async id => await CategoryModel.findOneById(id), 
       {message: "category does not exist"}),
   name: 
     string().
@@ -16,11 +16,9 @@ const category = object({
 export const CategorySchema = {
 
   get: object({
-    id: string().refine(async value => {
-      //if the param is not a number, schema rejects
-      if(isNaN(Number(value))) { return false }
+    name: string().refine(async value => {
       //category does not exist, schema rejects
-      if(!await CategoryModel.findOne(Number(value))) { return false }
+      if(!await CategoryModel.findOneByName(value)) { return false }
       //otherwise schema passed
       return true
     }, {message: "category does not exist"})
