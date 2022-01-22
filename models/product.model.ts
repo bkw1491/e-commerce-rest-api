@@ -38,7 +38,7 @@ export const ProductModel = {
       ON     product.category_id = category.id
       WHERE  category.name = $1`;
     
-    return await Db.one<IProduct[]>(sql, [categoryName]);
+    return await Db.many<IProduct[]>(sql, [categoryName]);
   },
 
   
