@@ -1,10 +1,8 @@
 import { Db } from '@config/database';
 import { ICategory } from "@interfaces/ICategory";
-import { IProduct } from '@interfaces/IProduct';
 
 
 export const CategoryModel = {
-  
 
   async findAll() {
 
@@ -16,22 +14,8 @@ export const CategoryModel = {
     return await Db.one<ICategory[]>(sql);
   },
 
-  
-  async findMany(categoryId: number) {
 
-    const sql = `
-    
-      SELECT product.*, category.name 
-      FROM   product
-      JOIN   category
-      ON     product.category_id = category.id
-      WHERE  category.id = $1`;
-    
-    return await Db.one<IProduct[]>(sql, [categoryId]);
-  },
-
-
-  async findOne(id: number) {
+  async findOneById(id: number) {
   
     const sql = `
 
@@ -40,6 +24,18 @@ export const CategoryModel = {
       WHERE  id = $1`;
   
     return await Db.one<ICategory>(sql, [id]);
+  },
+
+  
+  async findOneByName(name: string) {
+  
+    const sql = `
+
+      SELECT *
+      FROM   category
+      WHERE  name = $1`;
+  
+    return await Db.one<ICategory>(sql, [name]);
   },
 
   
