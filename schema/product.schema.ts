@@ -1,6 +1,6 @@
 import { CategoryModel } from '@models/category.model';
 import { ProductModel } from '@models/product.model';
-import { number, object, optional, string } from 'zod';
+import { number, object, string } from 'zod';
 
 
 
