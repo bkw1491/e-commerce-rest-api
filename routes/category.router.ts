@@ -1,7 +1,7 @@
 import express from 'express';
-import { validate } from '@middlewares/validate';
 
 import { Request, Response, NextFunction } from 'express';
+import { validate } from '@middlewares/validate';
 import { CategoryModel } from '@models/category.model';
 import { CategorySchema } from '@schemas/category.schema';
 import { verifyJWT } from '@middlewares/verify';
