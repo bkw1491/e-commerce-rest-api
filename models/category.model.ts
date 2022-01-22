@@ -21,13 +21,13 @@ export const CategoryModel = {
 
     const sql = `
     
-      SELECT product.* 
+      SELECT product.*, category.name 
       FROM   product
       JOIN   category
       ON     product.category_id = category.id
       WHERE  category.id = $1`;
     
-    return await Db.one<IProduct>(sql, [categoryId]);
+    return await Db.one<IProduct[]>(sql, [categoryId]);
   },
 
 
