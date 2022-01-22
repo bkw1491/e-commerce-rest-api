@@ -27,6 +27,20 @@ export const ProductModel = {
     return await Db.one<IProduct>(sql, [id]);
   },
 
+
+  async findByCategory(categoryName: string) {
+
+    const sql = `
+    
+      SELECT product.* 
+      FROM   product
+      JOIN   category
+      ON     product.category_id = category.id
+      WHERE  category.name = $1`;
+    
+    return await Db.one<IProduct[]>(sql, [categoryName]);
+  },
+
   
   async createOne(product: Omit<IProduct, "id">) {
 
