@@ -6,6 +6,7 @@ import { CategoryModel } from '@models/category.model';
 import { CategorySchema } from '@schemas/category.schema';
 import { verifyJWT } from '@middlewares/verify';
 import { toResponse } from '@utils/response';
+import { ProductModel } from '@models/product.model';
 
 
 export const categoryRouter = express.Router();
@@ -28,12 +29,12 @@ categoryRouter.get("/",
 })
 
 
-categoryRouter.get("/:id", validate(CategorySchema.get, "params"),
+categoryRouter.get("/:name", validate(CategorySchema.get, "params"),
   async (req: Request, res: Response, next: NextFunction) => {
 
   try {
     //returns an array of products filtered by category
-    const products = await CategoryModel.findMany(Number(req.params.id));
+    const products = await ProductModel.findByCategory(req.params.name);
 
     res.status(200).send(toResponse(products));
   } 
