@@ -24,8 +24,8 @@ export const CartSchema = {
     return true
   }, {message: "product not found or is out of stock"}),
 
-  update: cart.pick({id: true, quantity: true}),
-  delete: cart.pick({id: true}).refine(async input => {
+  update: cart.pick({user_id: true, id: true, quantity: true}),
+  delete: cart.pick({user_id: true, id: true}).refine(async input => {
     
     return await CartModel.findOne(input.id);
   }, {message: "product not in cart"})
