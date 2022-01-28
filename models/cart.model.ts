@@ -62,9 +62,9 @@ export const CartModel = {
       WHERE  cart.id = $2`
 
     //update item in the cart
-    const result = await Db.one<ICartItem>(sql, [quantity, id]);
+    await Db.one<ICartItem>(sql, [quantity, id]);
     //return the user's cart
-    return this.findMany(result.user_id)
+    return this.findMany(item.user_id);
   },
 
 
