@@ -20,7 +20,7 @@ export async function stripeSession(items: ICartItem[]) {
       quantity,
       price_data: {
         currency: 'gbp',
-        unit_amount: Math.round(price * 10000) / 100,
+        unit_amount: price,
         product_data: { name, description }
       }
     }
