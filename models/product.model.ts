@@ -58,7 +58,7 @@ export const ProductModel = {
                   image_url,
                   image_alt)
       VALUES      ($1, $2, $3, $4, $5)
-      RETURNING   *`
+      RETURNING   *`;
                 
     return await Db.one<IProduct>(sql, [name, 
       descr, price, image_url, image_alt]);
@@ -76,7 +76,7 @@ export const ProductModel = {
       SET       name = $1, 
                 descr = $2, 
                 price = $3, 
-                image_url = $4
+                image_url = $4,
                 image_alt = $5
       WHERE     id = $6
       RETURNING *`;
