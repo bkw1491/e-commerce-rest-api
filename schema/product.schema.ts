@@ -10,13 +10,6 @@ const product = object({
     number().
     refine(async id => await ProductModel.findOne(id), 
       {message: "product does not exist"}),
-  category_id: 
-    number().
-    refine(async id => await CategoryModel.findOneById(id), 
-      {message: "category does not exist"}),
-  inventory:
-    number().
-    min(0),
   name: 
     string().
     max(255),
