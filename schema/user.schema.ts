@@ -39,7 +39,6 @@ export const UserSchema = {
       //!not happy with this solution
       (input as any).id = user.id;
       (input as any).admin = user.admin
-      console.log(input);
       //returns false if passwords don't match
       return compare(input.password, user.password);
       
