@@ -1,4 +1,4 @@
-import express, { json } from 'express';
+import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import log from '@utils/logger';
@@ -6,6 +6,7 @@ import log from '@utils/logger';
 import { Request, Response } from 'express';
 import { userRouter } from '@routes/user.router';
 import { productRouter } from '@routes/product.router';
+import { inventoryRouter } from '@routes/inventory.router';
 import { categoryRouter } from '@routes/category.router';
 import { cartRouter } from '@routes/cart.router';
 import { orderRouter } from '@routes/order.router';
@@ -27,6 +28,7 @@ app.use(webhook);
 app.use("/", userRouter);
 app.use("/category", categoryRouter);
 app.use("/product", productRouter);
+app.use("/inventory", inventoryRouter);
 app.use("/cart", cartRouter);
 app.use("/order", orderRouter);
 
