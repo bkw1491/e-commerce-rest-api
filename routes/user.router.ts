@@ -41,8 +41,8 @@ userRouter.post("/auth", validate(UserSchema.auth, "body"),
     res.cookie("auth", token, {
       expires: new Date(Date.now() + (24 * 3600 * 1000)),
       httpOnly: true,
-      secure: true,
-      sameSite: 'none',
+      secure: process.env.NODE_ENV === "production",
+      sameSite: 'strict',
     });
     res.status(200).send(toResponse("login success"));
   }

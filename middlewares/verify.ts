@@ -8,6 +8,7 @@ export function verifyJWT(protection: "admin" | "user") {
   //?? make response middleware
   return (req: Request, res: Response, next: NextFunction) => {
     //return unauthorized if auth cookie not provided
+    console.log(req.cookies);
     if(!req.cookies.auth) {
       return res.status(401).send(toError("token not provided"))
     }
