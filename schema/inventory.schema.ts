@@ -14,6 +14,5 @@ const inventory = object({
 export const InventorySchema = {
 
   get: inventory.pick({ product_id: true }),
-  create: inventory.omit({ id: true }),
   update: inventory.omit({ id: true })
 }

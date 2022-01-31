@@ -28,23 +28,6 @@ inventoryRouter.get("/", verifyJWT("admin"), validate(InventorySchema.get, "body
 })
 
 
-inventoryRouter.post("/", verifyJWT("admin"), validate(InventorySchema.create, "body"),
-  async (req: Request, res: Response, next: NextFunction) => {
-
-  try {
-
-    const newInventory = await InventoryModel.createOne(req.body);
-    //send the created inventory back
-    res.status(201).send(toResponse(newInventory));
-  } 
-  
-  catch (err) {
-    
-    next(err);
-  }
-})
-
-
 inventoryRouter.put("/", verifyJWT("admin"), validate(InventorySchema.update, "body"),
   async (req: Request, res: Response, next: NextFunction) => {
 
