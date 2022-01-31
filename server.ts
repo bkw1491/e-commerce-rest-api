@@ -24,11 +24,11 @@ app.use(cors({origin: 'http://localhost:3000', credentials: true}))
 app.use(webhook);
 
 //register routes
-app.use("/api/", userRouter);
-app.use("/api/category", categoryRouter);
-app.use("/api/product", productRouter);
-app.use("/api/cart", cartRouter);
-app.use("/api/order", orderRouter);
+app.use("/", userRouter);
+app.use("/category", categoryRouter);
+app.use("/product", productRouter);
+app.use("/cart", cartRouter);
+app.use("/order", orderRouter);
 
 //basic health check route to check status of api
 app.get("/", (req: Request, res: Response) => {
