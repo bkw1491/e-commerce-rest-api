@@ -13,8 +13,7 @@ export const CartModel = {
     const sql = `
       SELECT *
       FROM   cart
-      WHERE  id = $1
-    `
+      WHERE  id = $1`
 
     return await Db.one<ICartItem>(sql, [id]);
   },

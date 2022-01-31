@@ -29,14 +29,16 @@ export const ProductModel = {
 
 
   async findByCategory(categoryName: string) {
-
+    //many to many relationship, see ERD
     const sql = `
     
       SELECT product.* 
-      FROM   product
-      JOIN   category
-      ON     product.category_id = category.id
-      WHERE  category.name = $1`;
+      FROM   product p
+      JOIN   product_category pc
+      ON     p.id = pc.product_id
+      JOIN   category c
+      ON     c.id = pc.category_id
+      WHERE  c.name = $1`;
     
     return await Db.many<IProduct[]>(sql, [categoryName]);
   },
@@ -44,78 +46,43 @@ export const ProductModel = {
   
   async createOne(product: Omit<IProduct, "id">) {
 
-    const { 
-      inventory, 
-      category_id, 
-      name, 
-      descr, 
-      price, 
-      image_url,
-      image_alt
-    } = product
+    const { name, descr, price, image_url, 
+      image_alt } = product
   
     const sql = `
 
-      INSERT INTO product (inventory, 
-                          category_id, 
-                          name, 
-                          descr, 
-                          price, 
-                          image_url,
-                          image_alt)
-      VALUES      ($1, $2, $3, $4, $5, $6)
+      INSERT INTO product 
+                  (name, 
+                  descr, 
+                  price, 
+                  image_url,
+                  image_alt)
+      VALUES      ($1, $2, $3, $4, $5)
       RETURNING   *`
                 
-    return await Db.one<IProduct>(sql, [inventory,category_id, 
-      name, descr, price, image_url, image_alt]);
+    return await Db.one<IProduct>(sql, [name, 
+      descr, price, image_url, image_alt]);
   },
 
   
   async updateOne(product: IProduct) {
 
-    const {
-      id,
-      inventory, 
-      category_id, 
-      name, 
-      descr, 
-      price, 
-      image_url,
-      image_alt
-    } = product
+    const { id, name, descr, price,
+      image_url, image_alt } = product
   
     const sql = `
     
       UPDATE    product
-      SET       category_id = $1,
-                inventory = $2,
-                name = $3, 
-                descr = $4, 
-                price = $5, 
-                image_url = $6
-                image_alt = $7
-      WHERE     id = $8
+      SET       name = $1, 
+                descr = $2, 
+                price = $3, 
+                image_url = $4
+                image_alt = $5
+      WHERE     id = $6
       RETURNING *`;
    
-    return await Db.one<IProduct>(sql, [category_id, 
-      inventory, name, descr, price, image_url, image_alt, id]);
-  },
-
-  
-  async updateMany(user_id: number) {
-
-    const sql = `
-    
-      UPDATE product
-      SET inventory = inventory - c.quantity
-      FROM (
-        SELECT quantity, product_id
-        FROM cart
-        WHERE user_id = $1
-      ) AS c
-      WHERE id = c.product_id`
-
-    return await Db.many<IProduct>(sql, [user_id]);
+    return await Db.one<IProduct>(sql, [name, 
+      descr, price, image_url, image_alt, id]);
   },
 
   

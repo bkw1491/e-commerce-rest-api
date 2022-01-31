@@ -6,6 +6,7 @@ import { Request, Response, NextFunction } from 'express';
 import { ProductModel } from '@models/product.model';
 import { verifyJWT } from '@middlewares/verify';
 import { toResponse } from '@utils/response';
+import { InventoryModel } from '@models/inventory.model';
 
 
 export const productRouter = express.Router();
@@ -48,10 +49,11 @@ async (req: Request, res: Response, next: NextFunction) => {
 productRouter.post("/", verifyJWT("admin"), validate(ProductSchema.create, "body"), 
   async (req: Request, res: Response, next: NextFunction) => {
 
-  try {
-    
-    //call method from product model
+  try { 
+    //TODO add an option to specify inventory when creating new product
     const newProduct = await ProductModel.createOne(req.body);
+    //add entry to inventory table, defaults to one, see todo above
+    await InventoryModel.createOne({ product_id: newProduct.id, quantity: 1 })
     //send back the new product that was created
     res.status(200).send(toResponse(newProduct));
   } 

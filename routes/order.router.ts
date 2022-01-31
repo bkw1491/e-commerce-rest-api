@@ -9,6 +9,7 @@ import { OrderSchema } from '@schemas/order.schema';
 import { ProductModel } from '@models/product.model';
 import { CartModel } from '@models/cart.model';
 import { toResponse } from '@utils/response';
+import { InventoryModel } from '@models/inventory.model';
 
 
 export const orderRouter = express.Router();
@@ -60,14 +61,14 @@ orderRouter.post("/webhook",
     const user_id = Number(client_reference_id);
     //check event is payment success event
     if(type === "checkout.session.completed") {
-      //the payment session returned success
+      //log for reference and debugging
       log(`User ${user_id} Payment Intent Succeeded`);
       //execute non-dependent tasks concurrently
       await Promise.all([
         //update order status to success
         OrderModel.updateOne({id: order_id, status: "SUCCESS"}),
         //update the product inventory
-        ProductModel.updateMany(user_id),
+        InventoryModel.updateMany(user_id),
         //add items to order items
         OrderModel.createItems(user_id, order_id)
       ]);
