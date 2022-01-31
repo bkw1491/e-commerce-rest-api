@@ -13,7 +13,6 @@ export function issue(user: IUser) {
     sub: user.id,
     admin: user.admin
   };
-  console.log(payload);
   //signing options for jwt
   const options = {
     expiresIn: process.env.JWT_EXPIRY
