@@ -30,18 +30,18 @@ export const InventoryModel = {
   },
    
 
-  async updateOne(inventory: IInventory) {
+  async updateOne(inventory: Omit<IInventory, "id">) {
 
-    const { id, quantity } = inventory
+    const { product_id, quantity } = inventory
   
     const sql = `
     
       UPDATE    inventory
-      SET       quantity = $2, 
-      WHERE     id = $1
+      SET       quantity = $2 
+      WHERE     product_id = $1
       RETURNING *`;
   
-    return await Db.one<IInventory>(sql, [id, quantity]);
+    return await Db.one<IInventory>(sql, [product_id, quantity]);
   },
 
   
