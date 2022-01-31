@@ -1,6 +1,6 @@
 import { CategoryModel } from '@models/category.model';
 import { ProductModel } from '@models/product.model';
-import { number, object, string } from 'zod';
+import { array, number, object, string } from 'zod';
 
 
 
@@ -24,7 +24,14 @@ const product = object({
     url(),
   image_alt: 
     string().
-    max(255)
+    max(255),
+  categories:
+    array(
+      string().
+      refine(async value => 
+        await CategoryModel.findOneByName(value.toLowerCase()), 
+        { message: "one or more categories do not exist" })
+    ).max(5)
 })
 
 export const ProductSchema = {
