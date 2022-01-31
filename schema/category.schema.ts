@@ -7,23 +7,25 @@ const category = object({
   id: 
     number().
     refine(async id => await CategoryModel.findOneById(id), 
-      {message: "category does not exist"}),
+      {message: "category id does not exist"}),
   name: 
+    string().
+    max(255),
+  descr:
     string().
     max(255)
 })
 
 export const CategorySchema = {
 
-  get: object({
-    name: string().refine(async value => {
-      //category does not exist, schema rejects
-      if(!await CategoryModel.findOneByName(value)) { return false }
-      //otherwise schema passed
-      return true
-    }, {message: "category does not exist"})
-  }),
-  create: category.pick({name: true}),
-  update: category.pick({id: true, name: true}),
+  get: category.pick({name: true}).refine(async input => 
+      await CategoryModel.findOneByName(input.name.toLowerCase()),
+      { message: "category does not exist" }),
+
+  create: category.omit({id: true}).refine(async input => 
+    !await CategoryModel.findOneByName(input.name.toLowerCase()),
+    { message: "category name already exists" }),
+    
+  update: category,
   delete: category.pick({id: true})
 }

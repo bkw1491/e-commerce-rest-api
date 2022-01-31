@@ -50,8 +50,8 @@ categoryRouter.post("/", verifyJWT("admin"), validate(CategorySchema.create, "bo
   async (req: Request, res: Response, next: NextFunction) => {
 
   try {
-    //call method from product controller
-    const newCategory = await CategoryModel.createOne(req.body.name);
+
+    const newCategory = await CategoryModel.createOne(req.body);
     //send the created category back
     res.status(201).send(toResponse(newCategory));
   } 
