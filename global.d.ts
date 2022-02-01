@@ -17,5 +17,6 @@ declare namespace NodeJS {
 
     //stripe secret key
     STRIPE_SECRET: string
+    STRIPE_WEBHOOK_SECRET: string
   }
 }
