@@ -14,9 +14,9 @@ cartRouter.get("/", verifyJWT("user"), validate(CartSchema.get, "body"),
 async (req: Request, res: Response, next: NextFunction) => {
   
   try {
-    //call method from cart model
+
     const cart = await CartModel.findMany(req.body.user_id);
-    //send cart back to the user
+
     res.status(200).send(toResponse(cart))
   } 
   
@@ -27,12 +27,12 @@ async (req: Request, res: Response, next: NextFunction) => {
 })
 
 
-cartRouter.post("/checkout", verifyJWT("user"),
+cartRouter.post("/checkout", verifyJWT("user"), validate(CartSchema.checkout, "body"),
   async (req: Request, res: Response, next: NextFunction) => {
 
     try {
-      //call method from cart model
-      const paymentUrl = await CartModel.checkout(req.body.user_id);
+
+      const paymentUrl = await CartModel.checkout(req.body.cart);
 
       res.redirect(303, paymentUrl);
     } 
@@ -48,9 +48,9 @@ cartRouter.post("/", verifyJWT("user"), validate(CartSchema.create, "body"),
   async (req: Request, res: Response, next: NextFunction) => {
 
   try {
-    //call method from cart model
+
     const cart = await CartModel.createOne(req.body);
-    //send the cart back in the response
+
     res.status(200).send(toResponse(cart));
   } 
   
@@ -66,9 +66,8 @@ cartRouter.put("/", verifyJWT("user"), validate(CartSchema.update, "body"),
 
   try {
 
-    //call method from cart model
     const cart = await CartModel.updateOne(req.body);
-    //send the cart back in the response
+
     res.status(200).send(toResponse(cart));    
   } 
   
@@ -83,9 +82,9 @@ cartRouter.delete("/", verifyJWT("user"), validate(CartSchema.delete, "body"),
   async (req: Request, res: Response, next: NextFunction) => {
 
   try {
-    //call method from cart model
+
     const cart = await CartModel.deleteOne(req.body.id);
-    //send the cart back in the response
+
     res.status(200).send(toResponse(cart));    
   } 
   

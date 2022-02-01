@@ -17,13 +17,14 @@ export const CartSchema = {
   get: cart.pick({user_id: true}),
 
   create: cart.omit({id: true}).refine(async input => {
-    //need to query db to check product exists/check enough stock
-    const [product, { quantity }] = await Promise.all([
-      ProductModel.findOne(input.product_id), 
-      InventoryModel.findOne(input.product_id)
-    ]);
+    //query db to check product exists
+    const product = await ProductModel.findOne(input.product_id); 
+    //reject if product not found
+    if(!product) { return false; }
+    //query db to check enough stock
+    const { quantity } = await InventoryModel.findOne(input.product_id);
     //if product doesn't exist or not enough stock, schema rejects
-    if(!product || quantity < input.quantity) { return false; }
+    if(quantity < input.quantity) { return false; }
     //schema passed
     return true;
   }, {message: "product not found or is out of stock"}),
@@ -32,5 +33,16 @@ export const CartSchema = {
   delete: cart.pick({user_id: true, id: true}).refine(async input => {
     
     return await CartModel.findOne(input.id);
-  }, {message: "product not in cart"})
+  }, {message: "product not in cart"}),
+
+  checkout: cart.pick({user_id: true}).refine(async input => {
+    //need to check for empty cart
+    const cart = await CartModel.findMany(input.user_id);
+    //reject if cart empty
+    if(cart.length === 0) { return false; }
+    //attach cart to req body, so don't have to query cart again later
+    (input as any).cart = cart;
+    //schema passed
+    return true;
+  }, {message: "cart is empty"})
 }
