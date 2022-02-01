@@ -12,11 +12,15 @@ import { InventoryModel } from '@models/inventory.model';
 export const productRouter = express.Router();
 
 
-productRouter.get("/", async (req: Request, res: Response, next: NextFunction) => {
+productRouter.get("/", validate(ProductSchema.getAll, "query"),
+ async (req: Request, res: Response, next: NextFunction) => {
 
   try {
-
-    const products = await ProductModel.findAll();
+    //return filtered products if a query string provided
+    //otherwise send back all products
+    const products = req.query.name 
+      ? await ProductModel.findByName(String(req.query.name))
+      : await ProductModel.findAll();
 
     res.status(200).send(toResponse(products));
   } 
@@ -28,8 +32,7 @@ productRouter.get("/", async (req: Request, res: Response, next: NextFunction) =
 })
 
 
-
-productRouter.get("/:id", validate(ProductSchema.get, "params"), 
+productRouter.get("/:id", validate(ProductSchema.getOne, "params"), 
 async (req: Request, res: Response, next: NextFunction) => {
   
   try {

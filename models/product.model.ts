@@ -43,6 +43,18 @@ export const ProductModel = {
     return await Db.many<IProduct>(sql, [categoryName]);
   },
 
+
+  async findByName(name: string) {
+    //ILIKE is case-insensitive
+    const sql = `
+
+      SELECT *
+      FROM   product
+      WHERE  name ~~* $1`;
+
+    return await Db.many<IProduct>(sql, [`%${name}%`]); 
+  },
+
   
   async createOne(product: Omit<IProduct, "id">) {
 

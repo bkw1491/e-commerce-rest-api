@@ -1,6 +1,6 @@
 import { CategoryModel } from '@models/category.model';
 import { ProductModel } from '@models/product.model';
-import { array, number, object, string } from 'zod';
+import { array, number, object, optional, string } from 'zod';
 
 
 
@@ -35,11 +35,15 @@ const product = object({
 })
 
 export const ProductSchema = {
-  
-  get: object({
+
+  getAll: optional(object({
+    name: string().max(50)
+  })),
+
+  getOne: object({
     //schema rejects if param is not a number
     id: string().refine(value => !isNaN(Number(value)),
-    {message: "product does not exist"})
+    { message: "product does not exist" })
   }),
   create: product.omit({id: true}),
   update: product,
