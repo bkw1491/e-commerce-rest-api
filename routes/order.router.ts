@@ -53,15 +53,13 @@ orderRouter.post("/webhook",
   async (req: Request, res: Response, next: NextFunction) => {
 
   try {
-
-    const { type } = req.body;
     //use payment_intent as the order_id
     const { payment_intent: order_id, client_reference_id}
        = req.body.data.object
     //cast client reference id to a number
     const user_id = Number(client_reference_id);
     //check event is payment success event
-    if(type === "checkout.session.completed") {
+    if(req.body.type === "checkout.session.completed") {
       //log for reference and debugging
       log(`User ${user_id} Payment Intent Succeeded`);
       //execute non-dependent tasks concurrently
