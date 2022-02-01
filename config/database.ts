@@ -46,6 +46,11 @@ export const Db = {
     //query returns many rows
     return result.rows;
   },
+
+  async none(sql: string, params?: unknown[]) : Promise<void> {
+    //returns no rows, currently only used when creating indexes
+    await pool.query(sql, params);
+  }
 }
 
 setupTables();
