@@ -23,7 +23,7 @@ export const CartModel = {
 
     const sql = `
 
-      SELECT c.id, c.user_id, c.quantity, 
+      SELECT c.id, c.user_id, c.quantity, c.product_id,
              p.name, p.descr, p.price, p.image_url, p.image_alt    
       FROM   cart c 
       JOIN   product p
@@ -52,7 +52,7 @@ export const CartModel = {
 
   async updateOne(item: ICartItem) {
 
-    const {quantity, id } = item;
+    const { quantity, id } = item;
 
     const sql = `
           
@@ -93,9 +93,7 @@ export const CartModel = {
   },
 
 
-  async checkout(user_id: number) {
-    //get the user's cart
-    const cart = await this.findMany(user_id);
+  async checkout(cart: ICartItem[]) {
     //calculate a total cost
     const total_cost = cart.reduce((total, item) => {
       return total + item.price;
@@ -103,10 +101,10 @@ export const CartModel = {
     //intialize a new payment session
     const session = await stripeSession(cart);
     //a user has checked out and has started a payment
-    log(`User ${user_id} Intialized A Payment Intent`);
+    log(`User ${cart[0].user_id} Intialized A Payment Intent`);
     //add order to the database, intially status is pending
     await OrderModel.createOne({id: session.payment_intent as string, 
-      user_id, total_cost, placed_date: new Date(), status: "PENDING"});
+      user_id: cart[0].user_id, total_cost, placed_date: new Date(), status: "PENDING"});
     //temp for testing
     console.log(session.url!);
     //return the url to the stripe payment page

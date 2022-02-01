@@ -12,7 +12,9 @@ export const InventoryModel = {
       FROM   inventory
       WHERE  product_id = $1`;
     
-    return await Db.one<IInventory>(sql, [product_id]);
+    const result = await Db.one<IInventory>(sql, [product_id]);
+    console.log(result);
+    return result;
   },
 
   
@@ -49,21 +51,16 @@ export const InventoryModel = {
     //used to update the inventory once payment completes
     const sql = `
 
-      WITH purchased as (
-
-        SELECT product_id, quantity
-        FROM cart_item
+      UPDATE inventory AS i
+      SET quantity = i.quantity - c.quantity
+      FROM (
+        SELECT quantity, product_id
+        FROM cart
         WHERE user_id = $1
-      )
-      
-      UPDATE inventory
-      SET    quantity = quantity - purchased.quantity
-      WHERE  product_id 
-      IN
-      SELECT product_id
-      FROM   purchased`
+      ) AS c
+      WHERE i.product_id = c.product_id`
 
-    return await Db.many<IInventory[]>(sql, [user_id]);
+    return await Db.many<IInventory>(sql, [user_id]);
   }
 }
 

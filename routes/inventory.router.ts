@@ -15,7 +15,7 @@ inventoryRouter.get("/", verifyJWT("admin"), validate(InventorySchema.get, "body
   async (req: Request, res: Response, next: NextFunction) => {
 
   try {
-    //returns inventory for specific product
+
     const inventory = await InventoryModel.findOne(req.body.product_id);
 
     res.status(200).send(toResponse(inventory));
