@@ -3,15 +3,16 @@ import { Request, Response, NextFunction } from 'express';
 import { ZodTypeAny, ZodError } from 'zod';
 
 
-export function validate(schema: ZodTypeAny, mode: "body" | "params") {
+export function validate(schema: ZodTypeAny, mode: "body" | "params" | "query") {
 
   return async (req: Request, res: Response, next: NextFunction) => {
 
     try {
       //parse schema async in case validation hits db
       //sometimes schema may mutate the request
-      if(mode === 'body') { req.body = await schema.parseAsync(req.body) }
-      if(mode === 'params') { await schema.parseAsync(req.params) }
+      if(mode === 'body') { req.body = await schema.parseAsync(req.body); }
+      if(mode === 'params') { await schema.parseAsync(req.params); }
+      if(mode === 'query') { await schema.parseAsync(req.query); }
       
       //move to next middleware if schema passes
       next();

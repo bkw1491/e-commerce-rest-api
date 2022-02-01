@@ -6,17 +6,22 @@ import { Request, Response, NextFunction } from 'express';
 import { ProductModel } from '@models/product.model';
 import { verifyJWT } from '@middlewares/verify';
 import { toResponse } from '@utils/response';
+import { InventoryModel } from '@models/inventory.model';
 
 
 export const productRouter = express.Router();
 
 
-productRouter.get("/", async (req: Request, res: Response, next: NextFunction) => {
+productRouter.get("/", validate(ProductSchema.getAll, "query"),
+ async (req: Request, res: Response, next: NextFunction) => {
 
   try {
-    //call method from product model
-    const products = await ProductModel.findAll();
-    //send the array of products back
+    //return filtered products if a query string provided
+    //otherwise send back all products
+    const products = req.query.name 
+      ? await ProductModel.findByName(String(req.query.name))
+      : await ProductModel.findAll();
+
     res.status(200).send(toResponse(products));
   } 
 
@@ -27,14 +32,13 @@ productRouter.get("/", async (req: Request, res: Response, next: NextFunction) =
 })
 
 
-
-productRouter.get("/:id", validate(ProductSchema.get, "params"), 
+productRouter.get("/:id", validate(ProductSchema.getOne, "params"), 
 async (req: Request, res: Response, next: NextFunction) => {
   
   try {
-    //call method from product model
+
     const product = await ProductModel.findOne(Number(req.params.id));
-    //return the product
+
     res.status(200).send(toResponse(product));
   } 
   
@@ -48,11 +52,12 @@ async (req: Request, res: Response, next: NextFunction) => {
 productRouter.post("/", verifyJWT("admin"), validate(ProductSchema.create, "body"), 
   async (req: Request, res: Response, next: NextFunction) => {
 
-  try {
-    
-    //call method from product model
+  try { 
+    //TODO add an option to specify inventory when creating new product
     const newProduct = await ProductModel.createOne(req.body);
-    //send back the new product that was created
+    //add entry to inventory table, defaults to one, see todo above
+    await InventoryModel.createOne({ product_id: newProduct.id, quantity: 1 })
+
     res.status(200).send(toResponse(newProduct));
   } 
 
@@ -68,9 +73,8 @@ productRouter.put("/", verifyJWT("admin"), validate(ProductSchema.update, "body"
 
   try {
   
-    //call method from product model
     const updatedProduct = await ProductModel.updateOne(req.body);
-    //send back the new product that was created
+
     res.status(200).send(toResponse(updatedProduct));
   } 
 
@@ -86,9 +90,8 @@ productRouter.delete("/", verifyJWT("admin"), validate(ProductSchema.delete, "bo
 
   try {
     
-    //call method from product model
     const deletedProduct = await ProductModel.deleteOne(req.body.id);
-    //send back the new product that was created
+
     res.status(200).send(toResponse(deletedProduct));
   } 
 

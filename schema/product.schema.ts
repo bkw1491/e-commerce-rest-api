@@ -1,6 +1,6 @@
 import { CategoryModel } from '@models/category.model';
 import { ProductModel } from '@models/product.model';
-import { number, object, string } from 'zod';
+import { array, number, object, optional, string } from 'zod';
 
 
 
@@ -10,13 +10,6 @@ const product = object({
     number().
     refine(async id => await ProductModel.findOne(id), 
       {message: "product does not exist"}),
-  category_id: 
-    number().
-    refine(async id => await CategoryModel.findOneById(id), 
-      {message: "category does not exist"}),
-  inventory:
-    number().
-    min(0),
   name: 
     string().
     max(255),
@@ -31,15 +24,26 @@ const product = object({
     url(),
   image_alt: 
     string().
-    max(255)
+    max(255),
+  categories:
+    array(
+      string().
+      refine(async value => 
+        await CategoryModel.findOneByName(value.toLowerCase()), 
+        { message: "one or more categories do not exist" })
+    ).max(5)
 })
 
 export const ProductSchema = {
-  
-  get: object({
+
+  getAll: optional(object({
+    name: string().max(50)
+  })),
+
+  getOne: object({
     //schema rejects if param is not a number
     id: string().refine(value => !isNaN(Number(value)),
-    {message: "product does not exist"})
+    { message: "product does not exist" })
   }),
   create: product.omit({id: true}),
   update: product,

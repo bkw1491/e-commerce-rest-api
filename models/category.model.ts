@@ -39,30 +39,32 @@ export const CategoryModel = {
   },
 
   
-  async createOne(name: string) {
+  async createOne(category: Omit<ICategory, "id">) {
+
+    const { name, descr } = category;
 
     const sql = `
 
-      INSERT INTO category (name)
-      VALUES      ($1)
+      INSERT INTO category (name, descr)
+      VALUES      ($1, $2)
       RETURNING   *`;
   
-    return await Db.one<ICategory>(sql, [name]);
+    return await Db.one<ICategory>(sql, [name, descr]);
   },
   
   
   async updateOne(category: ICategory) {
 
-    const { id, name } = category
+    const { id, name, descr } = category
   
     const sql = `
     
     UPDATE    category
-    SET       name = $1
-    WHERE     id = $2
+    SET       name = $1, descr = $2
+    WHERE     id = $3
     RETURNING *`;
   
-    return await Db.one<ICategory>(sql, [name, id]);
+    return await Db.one<ICategory>(sql, [name, descr, id]);
   },
   
   

@@ -5,7 +5,7 @@ import { Request, Response, NextFunction } from 'express';
 
 
 export function verifyJWT(protection: "admin" | "user") {
-  //?? make response middleware
+
   return (req: Request, res: Response, next: NextFunction) => {
     //return unauthorized if auth cookie not provided
     if(!req.cookies.auth) {

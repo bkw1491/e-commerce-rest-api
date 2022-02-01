@@ -39,13 +39,13 @@ export const OrderModel = {
 
   async createOne(order: IOrder) {
     //id is the stripe payment_intent id
-    const { id, user_id, total_cost, placed_date, status } = order
+    const { id, user_id, total_cost, placed_date, status } = order;
 
     const sql = `
 
-      INSERT INTO orders
-      VALUES      ($1, $2, $3, $4, $5)
-      RETURNING   *`;
+      INSERT INTO orders 
+      (id, user_id, total_cost, placed_date, status)
+      VALUES      ($1, $2, $3, $4, $5)`;
 
     await Db.one<IOrder>(sql, [id, user_id, 
       total_cost, placed_date, status]);
@@ -71,26 +71,24 @@ export const OrderModel = {
     return await this.findOne(id);
   },
   
-  async createItems(user_id: number, order_id: string) {
+  
+  async createItems(order: Pick<IOrder, "id" | "user_id">) {
 
-    //get cart items, and order id to insert order item
-    //TODO a better way of doing this
-    const sql = `
+    const { id, user_id } = order;
     
+    //get cart items, and order id to insert order item
+    const sql = `
+
     WITH items AS (
-      SELECT product_id, quantity, (
-        SELECT id
-        FROM orders
-        WHERE id = $2
-      )
+      SELECT product_id, quantity, $1
       FROM cart
-      WHERE user_id = $1
+      WHERE user_id = $2
     )
         
     INSERT INTO order_item (product_id, quantity, order_id)
     SELECT * FROM items
     RETURNING *`;
         
-    await Db.many<IOrderItem>(sql, [user_id, order_id])
+    return await Db.many<IOrderItem>(sql, [id, user_id])
   }
 }
