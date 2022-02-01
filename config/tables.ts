@@ -86,6 +86,16 @@ const sqlOrderItem = `
     FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
   )`;
 
+//TODO need to research more on this
+//TODO won't see any performance gains with the small test dataset
+const productNameIndex = `
+
+  CREATE EXTENSION IF NOT EXISTS pg_trgm;
+
+  CREATE INDEX IF NOT EXISTS idx_gin_product_name 
+  ON product
+  USING gin (name gin_trgm_ops)`;
+
 export async function setupTables() {
 
   try {
@@ -106,6 +116,11 @@ export async function setupTables() {
     
       //tables have order foriegn key lasy
       await Db.one(sqlOrderItem);
+
+      //finally create index on the product name
+      //improves performance of pattern matching when searching for a product
+      //NOTE will need to create a bTree index for WHERE = queries
+      await Db.none(productNameIndex);
   }
 
   catch(err: unknown) {
