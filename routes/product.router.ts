@@ -15,9 +15,9 @@ export const productRouter = express.Router();
 productRouter.get("/", async (req: Request, res: Response, next: NextFunction) => {
 
   try {
-    //call method from product model
+
     const products = await ProductModel.findAll();
-    //send the array of products back
+
     res.status(200).send(toResponse(products));
   } 
 
@@ -33,9 +33,9 @@ productRouter.get("/:id", validate(ProductSchema.get, "params"),
 async (req: Request, res: Response, next: NextFunction) => {
   
   try {
-    //call method from product model
+
     const product = await ProductModel.findOne(Number(req.params.id));
-    //return the product
+
     res.status(200).send(toResponse(product));
   } 
   
@@ -54,7 +54,7 @@ productRouter.post("/", verifyJWT("admin"), validate(ProductSchema.create, "body
     const newProduct = await ProductModel.createOne(req.body);
     //add entry to inventory table, defaults to one, see todo above
     await InventoryModel.createOne({ product_id: newProduct.id, quantity: 1 })
-    //send back the new product that was created
+
     res.status(200).send(toResponse(newProduct));
   } 
 
@@ -70,9 +70,8 @@ productRouter.put("/", verifyJWT("admin"), validate(ProductSchema.update, "body"
 
   try {
   
-    //call method from product model
     const updatedProduct = await ProductModel.updateOne(req.body);
-    //send back the new product that was created
+
     res.status(200).send(toResponse(updatedProduct));
   } 
 
@@ -88,9 +87,8 @@ productRouter.delete("/", verifyJWT("admin"), validate(ProductSchema.delete, "bo
 
   try {
     
-    //call method from product model
     const deletedProduct = await ProductModel.deleteOne(req.body.id);
-    //send back the new product that was created
+
     res.status(200).send(toResponse(deletedProduct));
   } 
 

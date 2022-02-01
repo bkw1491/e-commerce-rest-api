@@ -52,7 +52,7 @@ categoryRouter.post("/", verifyJWT("admin"), validate(CategorySchema.create, "bo
   try {
 
     const newCategory = await CategoryModel.createOne(req.body);
-    //send the created category back
+
     res.status(201).send(toResponse(newCategory));
   } 
   

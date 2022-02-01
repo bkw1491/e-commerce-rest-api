@@ -7,7 +7,7 @@ import { UserModel } from '@models/user.model';
 import { issue } from '@utils/token';
 import { toResponse } from '@utils/response';
 
-//intialize user router
+
 export const userRouter = express.Router();
 
 
@@ -15,9 +15,9 @@ userRouter.post("/register", validate(UserSchema.register, "body"),
   async (req: Request, res: Response, next: NextFunction) => {
 
   try {
-    //call method from user model
+
     const newUser = await UserModel.createOne(req.body);
-    //send the response
+
     res.status(201).send(toResponse(newUser));
   }
 
@@ -36,8 +36,8 @@ userRouter.post("/auth", validate(UserSchema.auth, "body"),
     const token = issue(req.body)
     //http only prevents client-side javascript from accessing the cookie
     //no sensitive info is stored in the cookie anyway
-    //TODO convert .env JWT_EXPIRY string to number to use here in maxAge
     //set the cookie on the response
+    //TODO convert .env JWT_EXPIRY string to number to use here in maxAge
     res.cookie("auth", token, {
       expires: new Date(Date.now() + (24 * 3600 * 1000)),
       httpOnly: true,
