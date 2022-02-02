@@ -44,6 +44,23 @@ export const ProductModel = {
   },
 
 
+  async findByCategories(categories: string[]) {
+    //many to many relationship, see ERD
+    const sql = `
+    
+      SELECT p.* 
+      FROM   product p
+      JOIN   product_category pc
+      ON     p.id = pc.product_id
+      JOIN   category c
+      ON     c.name = pc.category_name
+      WHERE  c.name = $1
+      AND    c.name = $2`;
+    
+    return await Db.many<IProduct>(sql, [categories[0], categories[1]]);
+  },
+
+
   async findByName(name: string) {
     //ILIKE is case-insensitive
     const sql = `
