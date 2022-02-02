@@ -1,4 +1,4 @@
-import { object, string, number } from 'zod';
+import { object, string, number, optional } from 'zod';
 import { CategoryModel } from '@models/category.model';
 
 
@@ -12,8 +12,9 @@ const category = object({
     string().
     max(255),
   descr:
+    optional(
     string().
-    max(255)
+    max(255))
 })
 
 export const CategorySchema = {
