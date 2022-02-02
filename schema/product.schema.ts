@@ -29,7 +29,7 @@ const product = object({
     array(
       string().
       refine(async value => 
-        await CategoryModel.findOneByName(value.toLowerCase()), 
+        await CategoryModel.findOneByName(value), 
         { message: "one or more categories do not exist" })
     ).max(5)
 })
