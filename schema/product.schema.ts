@@ -36,9 +36,15 @@ const product = object({
 
 export const ProductSchema = {
 
-  get: optional(object({
+  getAll: optional(object({
     name: optional(string().max(50))
   })),
+
+  getOne: object({
+    //schema rejects if param is not a number
+    id: string().refine(value => !isNaN(Number(value)),
+    { message: "product does not exist" })
+  }),
   create: product.omit({id: true}),
   update: product,
   delete: product.pick({id: true})
