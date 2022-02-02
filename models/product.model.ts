@@ -38,8 +38,8 @@ export const ProductModel = {
       ON     p.id = pc.product_id
       JOIN   category c
       ON     c.name = pc.category_name
-      WHERE  c.name = $1
-      AND    p.department = $2`;
+      WHERE  p.department = $1
+      AND    c.name = $2`;
     
     return await Db.many<IProduct>(sql, [department, category]);
   },
