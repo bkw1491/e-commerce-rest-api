@@ -29,12 +29,12 @@ categoryRouter.get("/",
 })
 
 
-categoryRouter.get("/:name", validate(CategorySchema.getOne, "params"),
+categoryRouter.get("/:department",
   async (req: Request, res: Response, next: NextFunction) => {
 
   try {
     //returns an array of products filtered by category
-    const products = await ProductModel.findByCategory(req.params.name);
+    const products = await ProductModel.findByDepartment(req.params.department);
 
     res.status(200).send(toResponse(products));
   } 
@@ -46,12 +46,13 @@ categoryRouter.get("/:name", validate(CategorySchema.getOne, "params"),
 })
 
 
-categoryRouter.get("/:name/:subname", validate(CategorySchema.getOne, "params"),
+categoryRouter.get("/:department/:category",
   async (req: Request, res: Response, next: NextFunction) => {
 
   try {
     //returns an array of products filtered by categories
-    const products = await ProductModel.findByCategories([req.params.name, req.params.subname]);
+    const products = await ProductModel.findByCategory(req.params.department, 
+      req.params.category);
 
     res.status(200).send(toResponse(products));
   } 

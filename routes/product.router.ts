@@ -12,7 +12,7 @@ import { InventoryModel } from '@models/inventory.model';
 export const productRouter = express.Router();
 
 
-productRouter.get("/", validate(ProductSchema.getAll, "query"),
+productRouter.get("/", validate(ProductSchema.get, "query"),
  async (req: Request, res: Response, next: NextFunction) => {
 
   try {
@@ -32,7 +32,7 @@ productRouter.get("/", validate(ProductSchema.getAll, "query"),
 })
 
 
-productRouter.get("/:id", validate(ProductSchema.getOne, "params"), 
+productRouter.get("/:id", 
 async (req: Request, res: Response, next: NextFunction) => {
   
   try {

@@ -28,23 +28,7 @@ export const ProductModel = {
   },
 
 
-  async findByCategory(categoryName: string) {
-    //many to many relationship, see ERD
-    const sql = `
-    
-      SELECT p.* 
-      FROM   product p
-      JOIN   product_category pc
-      ON     p.id = pc.product_id
-      JOIN   category c
-      ON     c.name = pc.category_name
-      WHERE  c.name = $1`;
-    
-    return await Db.many<IProduct>(sql, [categoryName]);
-  },
-
-
-  async findByCategories(categories: string[]) {
+  async findByCategory(department: string, category: string) {
     //many to many relationship, see ERD
     const sql = `
     
@@ -55,9 +39,21 @@ export const ProductModel = {
       JOIN   category c
       ON     c.name = pc.category_name
       WHERE  c.name = $1
-      AND    c.name = $2`;
+      AND    p.department = $2`;
     
-    return await Db.many<IProduct>(sql, [categories[0], categories[1]]);
+    return await Db.many<IProduct>(sql, [department, category]);
+  },
+
+
+  async findByDepartment(department: string) {
+
+    const sql = `
+    
+      SELECT * 
+      FROM   product
+      WHERE  department = $1`;
+    
+    return await Db.many<IProduct>(sql, [department]);
   },
 
 
