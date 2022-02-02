@@ -19,6 +19,9 @@ const product = object({
   price: 
     number().
     min(0),
+  department:
+    string().
+    max(255),
   image_url: 
     string().
     url(),
