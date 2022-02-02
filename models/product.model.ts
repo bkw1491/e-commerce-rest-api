@@ -72,7 +72,7 @@ export const ProductModel = {
   async createOne(product: Omit<IProduct, "id">) {
 
     const { name, descr, price, image_url, 
-      image_alt, categories } = product;
+      image_alt, department, categories } = product;
   
     //need to insert array of category names into junction table
     //adapted from: https://dba.stackexchange.com/questions/63270/unnest-multiple-arrays-into-rows
@@ -81,19 +81,19 @@ export const ProductModel = {
       WITH p AS (
 
         INSERT INTO product 
-        (name, descr, price, image_url, image_alt)
-        VALUES ($1, $2, $3, $4, $5)
+        (name, descr, price, image_url, image_alt, department)
+        VALUES ($1, $2, $3, $4, $5, $6)
         RETURNING *
       )
         
       INSERT INTO product_category
       (product_id, category_name)
       SELECT p.id, cname
-      FROM p, unnest($6::text[]) AS cname
+      FROM p, unnest($7::text[]) AS cname
       RETURNING (SELECT id FROM p);`;
     
     const { id } = await Db.one<Pick<IProduct, "id">>(sqlProduct, [name, 
-      descr, price, image_url, image_alt, categories]);
+      descr, price, image_url, image_alt, department, categories]);
     //?? is there a way to return this from the query above??
     return { id, ...product };
   },
@@ -102,7 +102,7 @@ export const ProductModel = {
   async updateOne(product: IProduct) {
 
     const { id, name, descr, price,
-      image_url, image_alt, categories } = product
+      image_url, image_alt, department, categories } = product
   
     //need to insert array of category names into junction table
     //first remove any entries for product
@@ -118,17 +118,17 @@ export const ProductModel = {
         INSERT INTO product_category
         (product_id, category_name)
         SELECT $1, cnames
-        FROM unnest($7::text[]) AS cnames
+        FROM unnest($8::text[]) AS cnames
       )
 
       UPDATE product
       SET name = $2, descr = $3, price = $4, 
-      image_url = $5, image_alt = $6
+      image_url = $5, image_alt = $6, department = $7
       WHERE id = $1
       RETURNING *`;  
    
     const updated = await Db.one<IProduct>(sql, [id, name, 
-      descr, price, image_url, image_alt, categories]);
+      descr, price, image_url, image_alt, department, categories]);
     //?? is there a way to return this from the query above??
     return { ...updated, categories }
   },
