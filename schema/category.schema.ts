@@ -19,11 +19,11 @@ const category = object({
 export const CategorySchema = {
 
   get: category.pick({name: true}).refine(async input => 
-      await CategoryModel.findOneByName(input.name.toLowerCase()),
+      await CategoryModel.findOneByName(input.name),
       { message: "category does not exist" }),
 
   create: category.omit({id: true}).refine(async input => 
-    !await CategoryModel.findOneByName(input.name.toLowerCase()),
+    !await CategoryModel.findOneByName(input.name),
     { message: "category name already exists" }),
     
   update: category,
