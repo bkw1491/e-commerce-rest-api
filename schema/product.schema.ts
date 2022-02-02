@@ -37,7 +37,7 @@ const product = object({
 export const ProductSchema = {
 
   getAll: optional(object({
-    name: string().max(50)
+    name: optional(string().max(50))
   })),
 
   getOne: object({
