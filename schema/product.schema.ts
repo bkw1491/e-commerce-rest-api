@@ -34,7 +34,7 @@ const product = object({
       refine(async value => 
         await CategoryModel.findOneByName(value), 
         { message: "one or more categories do not exist" })
-    ).max(5)
+    ).max(5).min(1)
 })
 
 export const ProductSchema = {
