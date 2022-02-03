@@ -1,9 +1,9 @@
 import pg from 'pg'
+
 import { setupTables } from './tables';
 
 //TODO better way to manage different enviroments?
 function getOptions() {
-
   //options for production
   if(process.env.NODE_ENV == "production") {
 
