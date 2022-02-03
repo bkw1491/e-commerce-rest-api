@@ -1,5 +1,5 @@
-import { CategoryModel } from '@models/category.model';
-import { ProductModel } from '@models/product.model';
+import { CategoryModel } from '@models/Category';
+import { ProductModel } from '@models/Product';
 import { array, number, object, optional, string } from 'zod';
 
 
@@ -48,6 +48,7 @@ export const ProductSchema = {
     id: string().refine(value => !isNaN(Number(value)),
     { message: "product does not exist" })
   }),
+
   create: product.omit({id: true}),
   update: product,
   delete: product.pick({id: true})

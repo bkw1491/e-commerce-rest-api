@@ -1,5 +1,5 @@
 import { number, object, string } from 'zod';
-import { UserModel } from '@models/user.model';
+import { UserModel } from '@models/User';
 import { compare } from '@utils/crypt';
 
 

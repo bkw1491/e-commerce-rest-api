@@ -1,5 +1,5 @@
 import { object, string, number, optional } from 'zod';
-import { CategoryModel } from '@models/category.model';
+import { CategoryModel } from '@models/Category';
 
 
 const category = object({

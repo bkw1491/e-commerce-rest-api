@@ -2,7 +2,7 @@ import log from '@utils/logger';
 
 import { Db } from "@config/database";
 import { ICartItem } from "@interfaces/ICartItem";
-import { OrderModel } from '@models/order.model';
+import { OrderModel } from '@models/Order';
 import { stripeSession } from '@utils/stripe';
 
 

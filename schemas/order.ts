@@ -1,6 +1,6 @@
 import { date, number, string, object } from 'zod'
-import { OrderModel } from '@models/order.model'
-import { UserModel } from '@models/user.model'
+import { OrderModel } from '@models/Order'
+import { UserModel } from '@models/User'
 
 
 const order = object({

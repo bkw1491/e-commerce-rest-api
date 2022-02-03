@@ -1,4 +1,4 @@
-import { ProductModel } from '@models/product.model';
+import { ProductModel } from '@models/Product';
 import { object, number } from 'zod';
 
 //if product in product table, will always be in inventory table
