@@ -13,7 +13,7 @@
       "@models/*": ["models/*"],
       "@interfaces/*": ["interfaces/*"],
       "@middlewares/*": ["middlewares/*"],
-      "@schemas/*": ["schema/*"],
+      "@schemas/*": ["schemas/*"],
       "@routes/*": ["routes/*"],
       "@utils/*": ["utils/*"],
     }                  
