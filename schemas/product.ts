@@ -39,14 +39,9 @@ const product = object({
 
 export const ProductSchema = {
 
-  getAll: optional(object({
-    name: optional(string().max(50)),
-    id: optional(string().max(50)).refine(id => !isNaN(Number(id)))
-  })),
-
   get: optional(object({
     name: optional(string().max(50)),
-    id: optional(string().max(50)).refine(id => !isNaN(Number(id)))
+    id: optional(string().max(50).refine(id => !isNaN(Number(id))))
   })),
 
   create: product.omit({id: true}),
