@@ -111,32 +111,9 @@
         "produces": [
           "application/json"
         ],
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "description": "credentials of an existing user",
-            "required": true,
-            "type": "object",
-            "properties": {
-              "email": {
-                "type": "string"
-              },
-              "password": {
-                "type": "string"
-              }
-            }
-          }
-        ],
         "responses": {
           "200": {
-            "description": "SUCCESS- user registered successfuly"
-          },
-          "400": {
-            "description": "BAD REQUEST- request body didn't match schema"
-          },
-          "409": {
-            "description": "UNAUTHORIZED- invalid email or password"
+            "description": "SUCCESS"
           }
         }
       }
@@ -229,6 +206,27 @@
           "required": true,
           "type": "string"           
         }
+      ],
+      "responses": {
+        "200": {
+          "description": "SUCCESS"
+        }
+      }
+    }
+  },
+
+  "/shop/categories": {
+    "get": {
+      "tags": [
+        "shop"
+      ],
+      "summary": "get all categories",
+      "description": "",
+      "consumes": [
+        "application/json"
+      ],
+      "produces": [
+        "application/json"
       ],
       "responses": {
         "200": {
