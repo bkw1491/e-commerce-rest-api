@@ -107,7 +107,7 @@ export const CartModel = {
       user_id: cart[0].user_id, total_cost, placed_date: new Date(), status: "PENDING"});
     //temp for testing
     console.log(session.url!);
-    //return the url to the stripe payment page
+
     return session.url!;
   }
 }
