@@ -9,13 +9,13 @@
     "node": "16.13.0"
   },
   "_moduleAliases": {
-    "@config": "dist/config",
-    "@models": "dist/models",
-    "@interfaces": "dist/interfaces",
-    "@middlewares": "dist/middlewares",
-    "@schemas": "dist/schemas",
-    "@routes": "dist/routes",
-    "@utils": "dist/utils"
+    "@config": "./dist/config",
+    "@models": "./dist/models",
+    "@interfaces": "./dist/interfaces",
+    "@middlewares": "./dist/middlewares",
+    "@schemas": "./dist/schemas",
+    "@routes": "./dist/routes",
+    "@utils": "./dist/utils"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.2",
