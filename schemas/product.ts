@@ -43,11 +43,9 @@ export const ProductSchema = {
     name: optional(string().max(50))
   })),
 
-  getOne: object({
-    //schema rejects if param is not a number
-    id: string().refine(value => !isNaN(Number(value)),
-    { message: "product does not exist" })
-  }),
+  getByCategory: optional(object({
+    id: optional(string().max(50)).refine(id => !isNaN(Number(id)))
+  })),
 
   create: product.omit({id: true}),
   update: product,

@@ -50,25 +50,16 @@ shopRouter.get(
 
   
 //get products by department and category
+//or get a specific product if query provided
 shopRouter.get(
-  "/:department/:category", 
+  "/:department/:category",
+  validate(ProductSchema.getByCategory, "query"),
   asyncHandler(async (req: Request, res: Response) => {
 
-    const byCategory = await ProductModel.findByCategory(
-      req.params.department, req.params.category);
-
-    res.status(200).send(toResponse(byCategory));
-  }));
-
-
-//get a specific product
-shopRouter.get(
-  "/:department/:category/:id",
-  validate(ProductSchema.getOne, "params"),
-  asyncHandler(async (req: Request, res: Response) => {
-
-    const product = await ProductModel.findOne(
-      Number(req.params.id));
-
-    res.status(200).send(toResponse(product));
+    const byCategoryOrId = req.query.id 
+    ? await ProductModel.findOne(Number(req.query.id))
+    : await ProductModel.findByCategory(req.params.department, 
+      req.params.caetgory);
+    
+    res.status(200).send(toResponse(byCategoryOrId));
   }));
