@@ -40,10 +40,12 @@ const product = object({
 export const ProductSchema = {
 
   getAll: optional(object({
-    name: optional(string().max(50))
+    name: optional(string().max(50)),
+    id: optional(string().max(50)).refine(id => !isNaN(Number(id)))
   })),
 
-  getByCategory: optional(object({
+  get: optional(object({
+    name: optional(string().max(50)),
     id: optional(string().max(50)).refine(id => !isNaN(Number(id)))
   })),
 

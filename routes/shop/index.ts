@@ -7,6 +7,7 @@ import { ProductModel } from '@models/Product';
 import { toResponse } from '@utils/response';
 import { asyncHandler } from '@middlewares/async';
 import { CategoryModel } from '@models/Category';
+import { IProduct } from '@interfaces/IProduct';
 
 
 export const shopRouter = express.Router();
@@ -15,12 +16,13 @@ export const shopRouter = express.Router();
 //get all products or search filtered
 shopRouter.get(
   "/",
-  validate(ProductSchema.getAll, "query"),
+  validate(ProductSchema.get, "query"),
   asyncHandler(async (req: Request, res: Response) => {
    
-    const products = req.query.name 
-    ? await ProductModel.findByName(String(req.query.name))
-    : await ProductModel.findAll();
+    const products = 
+    req.query.name ? await ProductModel.findByName(String(req.query.name)) :
+    req.query.id ? await ProductModel.findOne(Number(req.query.id)) :
+    await ProductModel.findAll();
     
     res.status(200).send(toResponse(products));
   }));
@@ -50,16 +52,12 @@ shopRouter.get(
 
   
 //get products by department and category
-//or get a specific product if query provided
 shopRouter.get(
   "/:department/:category",
-  validate(ProductSchema.getByCategory, "query"),
   asyncHandler(async (req: Request, res: Response) => {
 
-    const byCategoryOrId = req.query.id 
-    ? await ProductModel.findOne(Number(req.query.id))
-    : await ProductModel.findByCategory(req.params.department, 
-      req.params.caetgory);
+    const byCategory = await ProductModel.findByCategory(
+      req.params.department, req.params.category);
     
-    res.status(200).send(toResponse(byCategoryOrId));
+    res.status(200).send(toResponse(byCategory));
   }));
