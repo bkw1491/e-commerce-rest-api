@@ -15,7 +15,8 @@
     "@middlewares": "./dist/middlewares",
     "@schemas": "./dist/schemas",
     "@routes": "./dist/routes",
-    "@utils": "./dist/utils"
+    "@utils": "./dist/utils",
+    "@docs": "./dist/docs"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.2",
