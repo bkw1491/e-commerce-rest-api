@@ -7,7 +7,6 @@ import { ProductModel } from '@models/Product';
 import { toResponse } from '@utils/response';
 import { asyncHandler } from '@middlewares/async';
 import { CategoryModel } from '@models/Category';
-import { IProduct } from '@interfaces/IProduct';
 
 
 export const shopRouter = express.Router();
@@ -15,7 +14,7 @@ export const shopRouter = express.Router();
 
 //get all products or search filtered
 shopRouter.get(
-  "/",
+  "/products",
   validate(ProductSchema.get, "query"),
   asyncHandler(async (req: Request, res: Response) => {
    
