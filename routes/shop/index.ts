@@ -6,6 +6,7 @@ import { ProductSchema } from '@schemas/product';
 import { ProductModel } from '@models/Product';
 import { toResponse } from '@utils/response';
 import { asyncHandler } from '@middlewares/async';
+import { CategoryModel } from '@models/Category';
 
 
 export const shopRouter = express.Router();
@@ -22,6 +23,17 @@ shopRouter.get(
     : await ProductModel.findAll();
     
     res.status(200).send(toResponse(products));
+  }));
+
+
+//get list of all categories
+shopRouter.get(
+  "/categories",
+  asyncHandler(async (req: Request, res: Response) => {
+   
+    const categories = await CategoryModel.findAll();
+    
+    res.status(200).send(toResponse(categories));
   }));
 
 
