@@ -57,7 +57,7 @@ shopRouter.get(
     const byCategory = await ProductModel.findByCategory(
       req.params.department, req.params.category);
 
-    res.status(200).send(byCategory);
+    res.status(200).send(toResponse(byCategory));
   }));
 
 
@@ -70,5 +70,5 @@ shopRouter.get(
     const product = await ProductModel.findOne(
       Number(req.params.id));
 
-    res.status(200).send(product);
+    res.status(200).send(toResponse(product));
   }));
