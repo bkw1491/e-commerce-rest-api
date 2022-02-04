@@ -1,8 +1,8 @@
 import express from 'express';
 
 import { orderRouter } from '@routes/user/order';
-import { authRouter } from './auth';
-import { registerRouter } from './register';
+import { authRouter } from '@routes/user/auth';
+import { registerRouter } from '@routes/user/register';
 
 
 export const userRouter = express.Router();

@@ -12,7 +12,6 @@ import { cookie } from '@utils/cookie';
 export const authRouter = express.Router();
 
 
-//authenticating users
 authRouter.post(
   "/", 
   validate(UserSchema.auth, "body"), 

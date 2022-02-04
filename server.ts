@@ -9,6 +9,7 @@ import { adminRouter } from '@routes/admin';
 import { shopRouter } from '@routes/shop';
 import { webhookRouter } from '@routes/webhook';
 import { errorHandler } from '@middlewares/error';
+import { docsRouter } from '@routes/docs';
 
 //initlaize express
 const app = express();
@@ -27,6 +28,7 @@ app.use(cors({
 
 //expects raw format
 app.use("/webhook", webhookRouter);
+app.use("/docs", docsRouter);
 //place all routes that expect json after this
 app.use(express.json());
 //register routes
@@ -39,5 +41,5 @@ app.use(errorHandler);
 
 //listen on port defined in .env file
 app.listen(process.env.PORT, () => {
-  log(`Listening On Port ${process.env.PORT}`)
+  log(`Listening On Port ${process.env.PORT}`);
 });
