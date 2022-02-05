@@ -1,5 +1,4 @@
 import express from "express";
-import log from "@utils/logger";
 
 import { Request, Response } from "express";
 import { validate } from "@middlewares/validate";
@@ -19,7 +18,6 @@ authRouter.post(
 		const token = issue(req.body);
 		//set cookie on client
 		res.cookie("auth", token, cookie);
-		log(`${res.cookie}`);
 		res.status(200).send(toResponse("auth success"));
 	})
 );

@@ -5,6 +5,6 @@ import { CookieOptions } from "express";
 export const cookie: CookieOptions = {
 	maxAge: Number(process.env.JWT_EXPIRY),
 	httpOnly: false,
-	secure: process.env.NODE_ENV === "production",
+	secure: false,
 	sameSite: "strict"
 };
