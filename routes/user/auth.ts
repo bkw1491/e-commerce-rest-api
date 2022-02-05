@@ -6,6 +6,7 @@ import { asyncHandler } from "@middlewares/async";
 import { UserSchema } from "@schemas/user";
 import { issue } from "@utils/token";
 import { cookie } from "@utils/cookie";
+import { toResponse } from "@utils/response";
 
 export const authRouter = express.Router();
 
@@ -17,6 +18,6 @@ authRouter.post(
 		const token = issue(req.body);
 		//set cookie on client
 		res.cookie("auth", token, cookie);
-		res.sendStatus(200);
+		res.status(200).send(toResponse("auth success"));
 	})
 );
