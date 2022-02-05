@@ -3,8 +3,7 @@ import { CookieOptions } from "express";
 //http only prevents client-side javascript from accessing cookie
 //??no sensitive info is stored in the cookie anyway, so can store in the header maybe??
 export const cookie: CookieOptions = {
-  expires: new Date(Date.now() + Number(process.env.JWT_EXPIRY)),
-  httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
-  sameSite: 'strict',
-}
+	expires: new Date(Date.now() + Number(process.env.JWT_EXPIRY)),
+	secure: process.env.NODE_ENV === "production",
+	sameSite: "strict"
+};
