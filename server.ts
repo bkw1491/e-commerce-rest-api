@@ -20,7 +20,12 @@ app.use(cookieParser());
 
 //adds the Access-Control-Allow-Credentials header to req
 //TODO this will change for production
-app.use(cors());
+app.use(
+	cors({
+		origin: "http://localhost:3000",
+		credentials: true
+	})
+);
 
 //expects raw format
 app.use("/webhook", webhookRouter);
