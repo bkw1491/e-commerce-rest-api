@@ -16,6 +16,7 @@ const app = express();
 
 //attackers can use this header to detect apps running Express
 app.disable("x-powered-by");
+app.use(cookieParser());
 
 //adds the Access-Control-Allow-Credentials header to req
 //TODO this will change for production
@@ -30,7 +31,6 @@ app.use(
 app.use("/webhook", webhookRouter);
 app.use("/docs", docsRouter);
 //place all routes that expect json after this
-app.use(cookieParser());
 app.use(express.json());
 //register routes
 app.use("/user", userRouter);
