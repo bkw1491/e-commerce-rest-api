@@ -29,7 +29,7 @@ authRouter.post(
 	verifyJWT("user"),
 	asyncHandler(async (req: Request, res: Response) => {
 		//remove the cookie to logout if it exists
-		if (req.cookies && req.cookies("auth")) res.clearCookie("auth");
+		res.clearCookie("auth");
 		res.status(200).send(toResponse("logout"));
 	})
 );
