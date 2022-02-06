@@ -23,7 +23,12 @@ app.use(cookieParser());
 //OPTIONS = preflight requests
 app.use(
 	cors({
-		origin: ["http://localhost:3000", "https://checkout.stripe.com"],
+		origin: [
+			"http://localhost:3000",
+			"https://e-commerce-frontend-bkw1491.vercel.app",
+			"https://e-commerce-frontend-git-main-bkw1491.vercel.app",
+			"https://e-commerce-frontend-hazel.vercel.app"
+		],
 		methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
 		credentials: true
 	})

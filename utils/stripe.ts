@@ -28,8 +28,8 @@ export async function stripeSession(items: ICartItem[]) {
 	return await stripe.checkout.sessions.create({
 		line_items,
 		mode: "payment",
-		success_url: "https://localhost:3000",
-		cancel_url: "https://localhost:3000",
+		success_url: "https://e-commerce-frontend-hazel.vercel.app",
+		cancel_url: "https://e-commerce-frontend-hazel.vercel.app",
 		client_reference_id: items[0].user_id.toString()
 	});
 }
