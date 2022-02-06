@@ -8,6 +8,7 @@ import { issue } from "@utils/token";
 import { cookie } from "@utils/cookie";
 import { toResponse } from "@utils/response";
 import { verifyJWT } from "@middlewares/verify";
+import { JsonWebTokenError } from "jsonwebtoken";
 
 export const authRouter = express.Router();
 
