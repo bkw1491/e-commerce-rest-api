@@ -23,7 +23,7 @@ app.use(cookieParser());
 //OPTIONS = preflight requests
 app.use(
 	cors({
-		origin: "http://localhost:3000",
+		origin: ["http://localhost:3000", "https://checkout.stripe.com"],
 		methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
 		credentials: true
 	})
