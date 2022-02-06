@@ -26,10 +26,10 @@ authRouter.post(
 
 authRouter.post(
 	"/logout",
-	verifyJWT("user"),
 	asyncHandler(async (req: Request, res: Response) => {
 		//remove the cookie to logout if it exists
-		res.clearCookie("auth");
-		res.status(200).send(toResponse("logout"));
+		if (!req.cookies.auth) res.status(400).send(toResponse("not logged in"));
+		req.cookies.set("auth", { expires: Date.now() });
+		res.status(200).send(toResponse("logout success"));
 	})
 );
