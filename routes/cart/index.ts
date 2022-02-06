@@ -32,7 +32,7 @@ cartRouter.post(
 		const paymentUrl = await CartModel.checkout(req.body.cart);
 		//run into lots of trouble with cors on front-ends when redirecting
 		//easier to send the link back to the client in res body
-		res.status(200).send(paymentUrl);
+		res.status(200).send(toResponse(paymentUrl));
 	})
 );
 
