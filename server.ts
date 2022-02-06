@@ -1,5 +1,4 @@
 import express from "express";
-import cors from "cors";
 import cookieParser from "cookie-parser";
 import log from "@utils/logger";
 
@@ -10,6 +9,7 @@ import { shopRouter } from "@routes/shop";
 import { webhookRouter } from "@routes/webhook";
 import { errorHandler } from "@middlewares/error";
 import { docsRouter } from "@routes/docs";
+import { cors } from "@middlewares/cors";
 
 //initlaize express
 const app = express();
@@ -18,14 +18,8 @@ const app = express();
 app.disable("x-powered-by");
 app.use(cookieParser());
 
-//adds the Access-Control-Allow-Credentials header to req
-//TODO this will change for production
-app.use(
-	cors({
-		origin: "http://localhost:3000",
-		credentials: true
-	})
-);
+//handles cors related headers, see middleware
+app.use(cors);
 
 //expects raw format
 app.use("/webhook", webhookRouter);
