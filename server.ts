@@ -10,12 +10,12 @@ import { shopRouter } from "@routes/shop";
 import { webhookRouter } from "@routes/webhook";
 import { errorHandler } from "@middlewares/error";
 import { docsRouter } from "@routes/docs";
+import helmet from "helmet";
 
 //initlaize express
 const app = express();
 
-//attackers can use this header to detect apps running Express
-app.disable("x-powered-by");
+app.use(helmet());
 app.use(cookieParser());
 
 //handles cors related headers
