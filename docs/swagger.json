@@ -1,789 +1,1296 @@
 {
-  "swagger": "2.0",
-  "info": {
-    "description": "An e-commerce API with functionality for registering and authenticating users as well as CRUD operations for categories, products, inventory, cart and orders. Some endpoints require a valid JWT which is automatically set in a http-only cookie when you login successfully. This is done by hitting the endpoint '/users/login'. Protected routes in the admin section all require admin status which is assigned through manual database access.",
-    "version": "1.0.0",
-    "title": "E-Commerce-API"
-  },
-  "host": "https://ecommerce-restapi.herokuapp.com",
-  "basePath": "/",
-  "schemes": [
-    "http"
-  ],
+	"swagger": "2.0",
+	"info": {
+		"description": "An e-commerce API with functionality for registering and authenticating users as well as CRUD operations for categories, products, inventory, cart and orders. Some endpoints require a valid JWT which is automatically set in a http-only cookie when you login successfully. This is done by hitting the endpoint '/users/login'. Protected routes in the admin section all require admin status which is assigned through manual database access.",
+		"version": "1.0.0",
+		"title": "E-Commerce-API"
+	},
+	"host": "https://ecommerce-restapi.herokuapp.com",
+	"basePath": "/",
+	"schemes": ["http"],
 
-  "paths": {
+	"paths": {
+		"/user/register": {
+			"post": {
+				"tags": ["user"],
+				"summary": "register a new user",
+				"description": "",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"name": "body",
+						"in": "body",
+						"description": "user object to register",
+						"required": true,
+						"type": "object",
+						"properties": {
+							"email": {
+								"type": "string",
+								"format": "email"
+							},
+							"password": {
+								"type": "string"
+							},
+							"confirm": {
+								"type": "string"
+							}
+						}
+					}
+				],
+				"responses": {
+					"201": {
+						"description": "API will return the id of the user",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"sent": {
+									"type": "string",
+									"format": "date-time"
+								},
+								"data": {
+									"type": "integer"
+								},
+								"error": {
+									"type": "array",
+									"nullable": true
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "API will return null data and an array of error messages",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"sent": {
+									"type": "string",
+									"format": "date-time"
+								},
+								"data": {
+									"type": "integer",
+									"nullable": true
+								},
+								"error": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
 
-    "/user/register": {
-      "post": {
-        "tags": [
-          "user"
-        ],
-        "summary": "register a new user",
-        "description": "",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "description": "user object to register",
-            "required": true,
-            "type": "object",
-            "properties": {
-              "email": {
-                "type": "string"
-              },
-              "password": {
-                "type": "string"
-              },
-              "confirm": {
-                "type": "string"
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "SUCCESS- user registered successfuly"
-          },
-          "400": {
-            "description": "BAD REQUEST- one or more parameters were invalid or password and comfirm fields do not match"
-          }
-        }
-      }
-    },
-      
-    "/user/auth": {
-      "post": {
-        "tags": [
-          "user"
-        ],
-        "summary": "authenticate an existing user",
-        "description": "",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "description": "credentials of an existing user",
-            "required": true,
-            "type": "object",
-            "properties": {
-              "email": {
-                "type": "string"
-              },
-              "password": {
-                "type": "string"
-              }
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "CREATED- new user registered"
-          },
-          "400": {
-            "description": "BAD REQUEST- request body didn't match schema"
-          }
-        }
-      }
-    },
+		"/user/auth": {
+			"post": {
+				"tags": ["user"],
+				"summary": "authenticate an existing user",
+				"description": "",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"name": "body",
+						"in": "body",
+						"description": "credentials of an existing user",
+						"required": true,
+						"type": "object",
+						"properties": {
+							"email": {
+								"type": "string"
+							},
+							"password": {
+								"type": "string"
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "API will return a success message",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"sent": {
+									"type": "string",
+									"format": "date-time"
+								},
+								"data": {
+									"type": "string"
+								},
+								"error": {
+									"type": "array",
+									"nullable": true
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "API will return null data an an array of error messages",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"sent": {
+									"type": "string",
+									"format": "date-time"
+								},
+								"data": {
+									"type": "string",
+									"nullable": true
+								},
+								"error": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
 
-    "/shop": {
-      "get": {
-        "tags": [
-          "shop"
-        ],
-        "summary": "get all products",
-        "description": "",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "SUCCESS"
-          }
-        }
-      }
-    },
+		"/shop/{department}": {
+			"get": {
+				"tags": ["shop"],
+				"summary": "returns products filtered by department",
+				"description": "",
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"name": "department",
+						"in": "path",
+						"required": true,
+						"type": "string"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "API will return an array of products",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"sent": {
+									"type": "string",
+									"format": "date-time"
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"schema": {
+											"$ref": "#/definitions/Product"
+										}
+									}
+								},
+								"error": {
+									"type": "array",
+									"nullable": true
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "department was not found"
+					}
+				}
+			}
+		},
 
-    "/shop/{department}": {
-      "get": {
-        "tags": [
-          "shop"
-        ],
-        "summary": "returns products filtered by department",
-        "description": "",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "department",
-            "in": "path",
-            "required": true,
-            "type": "string"           
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "success- user registered successfuly"
-          }
-        }
-    }
-  },
+		"/shop/{department}/{category}": {
+			"get": {
+				"tags": ["shop"],
+				"summary": "returns products filtered by category",
+				"description": "",
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"name": "department",
+						"in": "path",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"name": "category",
+						"in": "path",
+						"required": true,
+						"type": "string"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "API will return an array of products",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"sent": {
+									"type": "string",
+									"format": "date-time"
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"schema": {
+											"$ref": "#/definitions/Product"
+										}
+									}
+								},
+								"error": {
+									"type": "array",
+									"nullable": true
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "department or category was not found"
+					}
+				}
+			}
+		},
 
-  "/shop/{department}/{category}": {
-    "get": {
-      "tags": [
-        "shop"
-      ],
-      "summary": "returns products filtered by category",
-      "description": "",
-      "produces": [
-        "application/json"
-      ],
-      "parameters": [
-        {
-          "name": "department",
-          "in": "path",
-          "required": true,
-          "type": "string"           
-        },
-        {
-          "name": "category",
-          "in": "path",
-          "required": true,
-          "type": "string"           
-        }
-      ],
-      "responses": {
-        "200": {
-          "description": "SUCCESS"
-        }
-      }
-    }
-  },
+		"/products": {
+			"get": {
+				"tags": ["shop"],
+				"summary": "returns all products, products by name or a single product",
+				"description": "",
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"name": "name",
+						"in": "query",
+						"required": false,
+						"type": "string"
+					},
+					{
+						"name": "id",
+						"in": "query",
+						"required": false,
+						"type": "string"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "API will return an array of products or a single product",
+						"schema": {
+							"oneOf": [
+								{
+									"type": "object",
+									"properties": {
+										"sent": {
+											"type": "string",
+											"format": "date-time"
+										},
+										"data": {
+											"type": "array",
+											"items": {
+												"schema": {
+													"type": "array",
+													"items": {
+														"schema": {
+															"$ref": "#/definitions/Product"
+														}
+													}
+												}
+											}
+										},
+										"error": {
+											"type": "array",
+											"nullable": true
+										}
+									}
+								},
+								{
+									"type": "object",
+									"properties": {
+										"sent": {
+											"type": "string",
+											"format": "date-time"
+										},
+										"data": {
+											"schema": {
+												"$ref": "#/definitions/Product"
+											}
+										},
+										"error": {
+											"type": "array",
+											"nullable": true
+										}
+									}
+								},
 
-  "/shop/{department}/{category}/{id}": {
-    "get": {
-      "tags": [
-        "shop"
-      ],
-      "summary": "returns a specific product",
-      "description": "",
-      "produces": [
-        "application/json"
-      ],
-      "parameters": [
-        {
-          "name": "department",
-          "in": "path",
-          "required": true,
-          "type": "string"           
-        },
-        {
-          "name": "category",
-          "in": "path",
-          "required": true,
-          "type": "string"           
-        },
-        {
-          "name": "id",
-          "in": "path",
-          "required": true,
-          "type": "string"           
-        }
-      ],
-      "responses": {
-        "200": {
-          "description": "SUCCESS"
-        }
-      }
-    }
-  },
+								{
+									"type": "object",
+									"properties": {
+										"sent": {
+											"type": "string",
+											"format": "date-time"
+										},
+										"data": {
+											"type": "array"
+										},
+										"error": {
+											"type": "array",
+											"nullable": true
+										}
+									}
+								}
+							]
+						}
+					},
+					"400": {
+						"description": "API will return null data an an array of error messages",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"sent": {
+									"type": "string",
+									"format": "date-time"
+								},
+								"data": {
+									"type": "string",
+									"nullable": true
+								},
+								"error": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
 
-  "/shop/categories": {
-    "get": {
-      "tags": [
-        "shop"
-      ],
-      "summary": "get all categories",
-      "description": "",
-      "consumes": [
-        "application/json"
-      ],
-      "produces": [
-        "application/json"
-      ],
-      "responses": {
-        "200": {
-          "description": "SUCCESS"
-        }
-      }
-    }
-  },
+		"/shop/categories": {
+			"get": {
+				"tags": ["shop"],
+				"summary": "get all list of all categories",
+				"description": "",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"responses": {
+					"200": {
+						"description": "API will return an array of all categories",
+						"schema": {
+							"type": "array",
+							"items": {
+								"schema": {
+									"$ref": "#/definitions/Category"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
 
-  "/cart": {
-    "get": {
-      "tags": [
-        "cart"
-      ],
-      "summary": "returns a user's cart",
-      "description": "",
-      "produces": [
-        "application/json"
-      ],
-      "responses": {
-        "200": {
-          "description": "SUCCESS"
-        },
-        "409": {
-          "description": "UNAUTHORIZED- user not logged in"
-        }
-      }
-    },
+		"/cart": {
+			"get": {
+				"tags": ["cart"],
+				"summary": "returns a user's cart",
+				"description": "",
+				"produces": ["application/json"],
+				"responses": {
+					"200": {
+						"description": "API will return the user's cart",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"sent": {
+									"type": "string",
+									"format": "date-time"
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"schema": {
+											"type": "array",
+											"items": {
+												"schema": {
+													"$ref": "#/definitions/CartItem"
+												}
+											}
+										}
+									}
+								},
+								"error": {
+									"type": "array",
+									"nullable": true
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "API will return null data an an array of error messages",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"sent": {
+									"type": "string",
+									"format": "date-time"
+								},
+								"data": {
+									"type": "string",
+									"nullable": true
+								},
+								"error": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "API will return null data an an array of error messages",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"sent": {
+									"type": "string",
+									"format": "date-time"
+								},
+								"data": {
+									"type": "string",
+									"nullable": true
+								},
+								"error": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								}
+							}
+						}
+					}
+				}
+			},
 
-    "post": {
-      "tags": [
-        "cart"
-      ],
-      "summary": "add a product to a user's cart",
-      "description": "",
-      "produces": [
-        "application/json"
-      ],
-      "parameters": [
-        {
-          "name": "body",
-          "in": "body",
-          "description": "the item that will be added to the cart",
-          "required": true,
-          "type": "object",
-          "properties": {
-            "product_id": {
-              "type": "number"
-            },
-            "quantity": {
-              "type": "number"
-            }
-          }
-        }
-      ],
-      "responses": {
-        "201": {
-          "description": "CREATED- product added to cart"
-        },
-        "400": {
-          "description": "BAD REQUEST- request body didn't match schema"
-        },
-        "409": {
-          "description": "UNAUTHORIZED- user not logged in"
-        }
-      }
-    },
+			"post": {
+				"tags": ["cart"],
+				"summary": "add a product to a user's cart",
+				"description": "",
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"name": "body",
+						"in": "body",
+						"description": "the item that will be added to the cart",
+						"required": true,
+						"type": "object",
+						"properties": {
+							"product_id": {
+								"type": "number"
+							},
+							"quantity": {
+								"type": "number"
+							}
+						}
+					}
+				],
+				"responses": {
+					"201": {
+						"description": "API will return the user's cart",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"sent": {
+									"type": "string",
+									"format": "date-time"
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"schema": {
+											"type": "array",
+											"items": {
+												"schema": {
+													"$ref": "#/definitions/CartItem"
+												}
+											}
+										}
+									}
+								},
+								"error": {
+									"type": "array",
+									"nullable": true
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "API will return null data an an array of error messages",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"sent": {
+									"type": "string",
+									"format": "date-time"
+								},
+								"data": {
+									"type": "string",
+									"nullable": true
+								},
+								"error": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "API will return null data an an array of error messages",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"sent": {
+									"type": "string",
+									"format": "date-time"
+								},
+								"data": {
+									"type": "string",
+									"nullable": true
+								},
+								"error": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								}
+							}
+						}
+					}
+				}
+			},
 
-    "put": {
-      "tags": [
-        "cart"
-      ],
-      "summary": "update a product in the user's cart",
-      "description": "",
-      "produces": [
-        "application/json"
-      ],
-      "parameters": [
-        {
-          "name": "body",
-          "in": "body",
-          "description": "the item that will be updated",
-          "required": true,
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "number"
-            },
-            "quantity": {
-              "type": "number"
-            }
-          }
-        }
-      ],
-      "responses": {
-        "200": {
-          "description": "SUCCESS- product quantity updated"
-        },
-        "400": {
-          "description": "BAD REQUEST- request body didn't match schema or supplied id didn't exist"
-        },
-        "409": {
-          "description": "UNAUTHORIZED- user not logged in"
-        }
-      }
-    },
+			"put": {
+				"tags": ["cart"],
+				"summary": "update a product in the user's cart",
+				"description": "",
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"name": "body",
+						"in": "body",
+						"description": "the item that will be updated",
+						"required": true,
+						"type": "object",
+						"properties": {
+							"id": {
+								"type": "number"
+							},
+							"quantity": {
+								"type": "number"
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "API will return the user's cart",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"sent": {
+									"type": "string",
+									"format": "date-time"
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"schema": {
+											"type": "array",
+											"items": {
+												"schema": {
+													"$ref": "#/definitions/CartItem"
+												}
+											}
+										}
+									}
+								},
+								"error": {
+									"type": "array",
+									"nullable": true
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "API will return null data an an array of error messages",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"sent": {
+									"type": "string",
+									"format": "date-time"
+								},
+								"data": {
+									"type": "string",
+									"nullable": true
+								},
+								"error": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "API will return null data an an array of error messages",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"sent": {
+									"type": "string",
+									"format": "date-time"
+								},
+								"data": {
+									"type": "string",
+									"nullable": true
+								},
+								"error": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								}
+							}
+						}
+					}
+				}
+			},
 
-    "delete": {
-      "tags": [
-        "cart"
-      ],
-      "summary": "update a product in the user's cart",
-      "description": "",
-      "produces": [
-        "application/json"
-      ],
-      "parameters": [
-        {
-          "name": "body",
-          "in": "body",
-          "description": "the item that will be deleted",
-          "required": true,
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "number"
-            }
-          }
-        }
-      ],
-      "responses": {
-        "200": {
-          "description": "SUCCESS- product removed"
-        },
-        "400": {
-          "description": "BAD REQUEST- request body didn't match schema or supplied id didn't exist"
-        },
-        "409": {
-          "description": "UNAUTHORIZED- user not logged in"
-        }
-      }
-    }
-  },
+			"delete": {
+				"tags": ["cart"],
+				"summary": "update a product in the user's cart",
+				"description": "",
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"name": "body",
+						"in": "body",
+						"description": "the item that will be deleted",
+						"required": true,
+						"type": "object",
+						"properties": {
+							"id": {
+								"type": "number"
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "API will return the user's cart",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"sent": {
+									"type": "string",
+									"format": "date-time"
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"schema": {
+											"type": "array",
+											"items": {
+												"schema": {
+													"$ref": "#/definitions/CartItem"
+												}
+											}
+										}
+									}
+								},
+								"error": {
+									"type": "array",
+									"nullable": true
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "API will return null data an an array of error messages",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"sent": {
+									"type": "string",
+									"format": "date-time"
+								},
+								"data": {
+									"type": "string",
+									"nullable": true
+								},
+								"error": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "API will return null data an an array of error messages",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"sent": {
+									"type": "string",
+									"format": "date-time"
+								},
+								"data": {
+									"type": "string",
+									"nullable": true
+								},
+								"error": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
 
-  "/cart/checkout": {
-    "get": {
-      "tags": [
-        "cart"
-      ],
-      "summary": "returns a user's cart",
-      "description": "",
-      "produces": [
-        "application/json"
-      ],
-      "responses": {
-        "303": {
-          "description": "REDIRECTED- to stripe hosted checkout page"
-        },
-        "400": {
-          "description": "BAD REQUEST- cart empty"
-        },
-        "409": {
-          "description": "UNAUTHORIZED- user not logged in"
-        }
-      }
-    }
-  },
+		"/cart/checkout": {
+			"get": {
+				"tags": ["cart"],
+				"summary": "returns a user's cart",
+				"description": "",
+				"produces": ["application/json"],
+				"responses": {
+					"200": {
+						"description": "API will return the stripe payment url",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"sent": {
+									"type": "string",
+									"format": "date-time"
+								},
+								"data": {
+									"type": "string",
+									"format": "url"
+								},
+								"error": {
+									"type": "array",
+									"nullable": true
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "API will return null data an an array of error messages",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"sent": {
+									"type": "string",
+									"format": "date-time"
+								},
+								"data": {
+									"type": "string",
+									"nullable": true
+								},
+								"error": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "API will return null data an an array of error messages",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"sent": {
+									"type": "string",
+									"format": "date-time"
+								},
+								"data": {
+									"type": "string",
+									"nullable": true
+								},
+								"error": {
+									"type": "array",
+									"items": {
+										"type": "string"
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
 
-  "/admin/category": {
-    "post": {
-      "tags": [
-        "admin"
-      ],
-      "summary": "creates a new category",
-      "description": "",
-      "produces": [
-        "application/json"
-      ],
-      "parameters": [
-        {
-          "name": "body",
-          "in": "body",
-          "description": "the category that will be created",
-          "required": true,
-          "type": "object",
-          "properties": {
-            "name": {
-              "type": "string"
-            },
-            "descr": {
-              "type": "string",
-              "required": false
-            }
-          }
-        }
-      ],
-      "responses": {
-        "201": {
-          "description": "CREATED- new category created"
-        },
-        "400": {
-          "description": "BAD REQUEST- request body didn't match schema"
-        },
-        "409": {
-          "description": "UNAUTHORIZED- user not logged in or not admin"
-        }
-      }
-    },
+		"/admin/category": {
+			"post": {
+				"tags": ["admin"],
+				"summary": "creates a new category",
+				"description": "",
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"name": "body",
+						"in": "body",
+						"description": "the category that will be created",
+						"required": true,
+						"type": "object",
+						"properties": {
+							"name": {
+								"type": "string"
+							},
+							"descr": {
+								"type": "string",
+								"required": false
+							}
+						}
+					}
+				],
+				"responses": {
+					"201": {
+						"description": "CREATED- new category created",
+						"schema": {
+							"$ref": "#/definitions/ApiResponse"
+						}
+					},
+					"400": {
+						"description": "BAD REQUEST- request body didn't match schema"
+					},
+					"401": {
+						"description": "UNAUTHORIZED- user not logged in or not admin"
+					}
+				}
+			},
 
-    "put": {
-      "tags": [
-        "admin"
-      ],
-      "summary": "updated an existing category",
-      "description": "",
-      "produces": [
-        "application/json"
-      ],
-      "parameters": [
-        {
-          "name": "body",
-          "in": "body",
-          "description": "the category that will be updated",
-          "required": true,
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "string"
-            },
-            "name": {
-              "type": "string"
-            },
-            "descr": {
-              "type": "string",
-              "required": false
-            }
-          }
-        }
-      ],
-      "responses": {
-        "200": {
-          "description": "SUCCESS- category updated"
-        },
-        "400": {
-          "description": "BAD REQUEST- request body didn't match schema"
-        },
-        "409": {
-          "description": "UNAUTHORIZED- user not logged in or not admin"
-        }
-      }
-    },
+			"put": {
+				"tags": ["admin"],
+				"summary": "updated an existing category",
+				"description": "",
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"name": "body",
+						"in": "body",
+						"description": "the category that will be updated",
+						"required": true,
+						"type": "object",
+						"properties": {
+							"id": {
+								"type": "string"
+							},
+							"name": {
+								"type": "string"
+							},
+							"descr": {
+								"type": "string",
+								"required": false
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "SUCCESS- category updated",
+						"schema": {
+							"$ref": "#/definitions/ApiResponse"
+						}
+					},
+					"400": {
+						"description": "BAD REQUEST- request body didn't match schema"
+					},
+					"401": {
+						"description": "UNAUTHORIZED- user not logged in or not admin"
+					}
+				}
+			},
 
-    "delete": {
-      "tags": [
-        "admin"
-      ],
-      "summary": "delete an existing category",
-      "description": "",
-      "produces": [
-        "application/json"
-      ],
-      "parameters": [
-        {
-          "name": "body",
-          "in": "body",
-          "description": "the category that will be deleted",
-          "required": true,
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "string"
-            }
-          }
-        }
-      ],
-      "responses": {
-        "200": {
-          "description": "SUCCESS- category deleted"
-        },
-        "400": {
-          "description": "BAD REQUEST- request body didn't match schema or category id didn't exist"
-        },
-        "409": {
-          "description": "UNAUTHORIZED- user not logged in or not admin"
-        }
-      }
-    }
-  },
+			"delete": {
+				"tags": ["admin"],
+				"summary": "delete an existing category",
+				"description": "",
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"name": "body",
+						"in": "body",
+						"description": "the category that will be deleted",
+						"required": true,
+						"type": "object",
+						"properties": {
+							"id": {
+								"type": "string"
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "SUCCESS- category deleted",
+						"schema": {
+							"$ref": "#/definitions/ApiResponse"
+						}
+					},
+					"400": {
+						"description": "BAD REQUEST- request body didn't match schema or category id didn't exist"
+					},
+					"401": {
+						"description": "UNAUTHORIZED- user not logged in or not admin"
+					}
+				}
+			}
+		},
 
-  "/admin/product": {
+		"/admin/product": {
+			"post": {
+				"tags": ["admin"],
+				"summary": "creates a new product",
+				"description": "",
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"name": "body",
+						"in": "body",
+						"description": "the product that will be created",
+						"required": true,
+						"type": "object",
+						"properties": {
+							"name": {
+								"type": "string"
+							},
+							"descr": {
+								"type": "string"
+							},
+							"department": {
+								"type": "string"
+							},
+							"price": {
+								"type": "string"
+							},
+							"image_url": {
+								"type": "string"
+							},
+							"image_alt": {
+								"type": "string"
+							},
+							"categories": {
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							}
+						}
+					}
+				],
+				"responses": {
+					"201": {
+						"description": "CREATED- new product created",
+						"schema": {
+							"$ref": "#/definitions/ApiResponse"
+						}
+					},
+					"400": {
+						"description": "BAD REQUEST- request body didn't match schema or one or more categories did not exist"
+					},
+					"401": {
+						"description": "UNAUTHORIZED- user not logged in or not admin"
+					}
+				}
+			},
 
-    "post": {
-      "tags": [
-        "admin"
-      ],
-      "summary": "creates a new product",
-      "description": "",
-      "produces": [
-        "application/json"
-      ],
-      "parameters": [
-        {
-          "name": "body",
-          "in": "body",
-          "description": "the product that will be created",
-          "required": true,
-          "type": "object",
-          "properties": {
-            "name": {
-              "type": "string"
-            },
-            "descr": {
-              "type": "string"
-            },
-            "department": {
-              "type": "string"
-            },
-            "price": {
-              "type": "string"
-            },
-            "image_url": {
-              "type": "string"
-            },
-            "image_alt": {
-              "type": "string"
-            },
-            "categories": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          }
-        }
-      ],
-      "responses": {
-        "201": {
-          "description": "CREATED- new product created"
-        },
-        "400": {
-          "description": "BAD REQUEST- request body didn't match schema or one or more categories did not exist"
-        },
-        "409": {
-          "description": "UNAUTHORIZED- user not logged in or not admin"
-        }
-      }
-    },
+			"put": {
+				"tags": ["admin"],
+				"summary": "updates an existing product",
+				"description": "",
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"name": "body",
+						"in": "body",
+						"description": "the product that will be updated",
+						"required": true,
+						"type": "object",
+						"properties": {
+							"id": {
+								"type": "number"
+							},
+							"name": {
+								"type": "string"
+							},
+							"descr": {
+								"type": "string"
+							},
+							"department": {
+								"type": "string"
+							},
+							"price": {
+								"type": "string"
+							},
+							"image_url": {
+								"type": "string"
+							},
+							"image_alt": {
+								"type": "string"
+							},
+							"categories": {
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "SUCCESS- product updated",
+						"schema": {
+							"$ref": "#/definitions/ApiResponse"
+						}
+					},
+					"400": {
+						"description": "BAD REQUEST- request body didn't match schema, one or more categories did not exist or product id didn't exist"
+					},
+					"401": {
+						"description": "UNAUTHORIZED- user not logged in or not admin"
+					}
+				}
+			},
 
-    "put": {
-      "tags": [
-        "admin"
-      ],
-      "summary": "updates an existing product",
-      "description": "",
-      "produces": [
-        "application/json"
-      ],
-      "parameters": [
-        {
-          "name": "body",
-          "in": "body",
-          "description": "the product that will be updated",
-          "required": true,
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "number"
-            },
-            "name": {
-              "type": "string"
-            },
-            "descr": {
-              "type": "string"
-            },
-            "department": {
-              "type": "string"
-            },
-            "price": {
-              "type": "string"
-            },
-            "image_url": {
-              "type": "string"
-            },
-            "image_alt": {
-              "type": "string"
-            },
-            "categories": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          }
-        }
-      ],
-      "responses": {
-        "200": {
-          "description": "SUCCESS- product updated"
-        },
-        "400": {
-          "description": "BAD REQUEST- request body didn't match schema, one or more categories did not exist or product id didn't exist"
-        },
-        "409": {
-          "description": "UNAUTHORIZED- user not logged in or not admin"
-        }
-      }
-    },
+			"delete": {
+				"tags": ["admin"],
+				"summary": "deletes an existing product",
+				"description": "",
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"name": "body",
+						"in": "body",
+						"description": "the product that will be deleted",
+						"required": true,
+						"type": "object",
+						"properties": {
+							"id": {
+								"type": "number"
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "SUCCESS- product deleted",
+						"schema": {
+							"$ref": "#/definitions/ApiResponse"
+						}
+					},
+					"400": {
+						"description": "BAD REQUEST- request body didn't match schema or product id didn't exist"
+					},
+					"401": {
+						"description": "UNAUTHORIZED- user not logged in or not admin"
+					}
+				}
+			}
+		},
 
-    "delete": {
-      "tags": [
-        "admin"
-      ],
-      "summary": "deletes an existing product",
-      "description": "",
-      "produces": [
-        "application/json"
-      ],
-      "parameters": [
-        {
-          "name": "body",
-          "in": "body",
-          "description": "the product that will be deleted",
-          "required": true,
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "number"
-            }
-          }
-        }
-      ],
-      "responses": {
-        "200": {
-          "description": "SUCCESS- product deleted"
-        },
-        "400": {
-          "description": "BAD REQUEST- request body didn't match schema or product id didn't exist"
-        },
-        "409": {
-          "description": "UNAUTHORIZED- user not logged in or not admin"
-        }
-      }
-    }
-  },
+		"/admin/inventory": {
+			"get": {
+				"tags": ["admin"],
+				"summary": "creates a new product",
+				"description": "",
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"name": "body",
+						"in": "body",
+						"description": "the product who's inventory will be returned",
+						"required": true,
+						"type": "object",
+						"properties": {
+							"product_id": {
+								"type": "number"
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "SUCCESS",
+						"schema": {
+							"$ref": "#/definitions/ApiResponse"
+						}
+					},
+					"400": {
+						"description": "BAD REQUEST- request body didn't match schema or product id didn't exist"
+					},
+					"401": {
+						"description": "UNAUTHORIZED- user not logged in or not admin"
+					}
+				}
+			},
 
-  "/admin/inventory": {
+			"put": {
+				"tags": ["admin"],
+				"summary": "updates an existing product",
+				"description": "",
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"name": "body",
+						"in": "body",
+						"description": "the product that who's inventory will be updated",
+						"required": true,
+						"type": "object",
+						"properties": {
+							"product_id": {
+								"type": "number"
+							},
+							"quantity": {
+								"type": "number"
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "SUCCESS- inventory updated",
+						"schema": {
+							"$ref": "#/definitions/ApiResponse"
+						}
+					},
+					"400": {
+						"description": "BAD REQUEST- request body didn't match schema or product id didn't exist"
+					},
+					"401": {
+						"description": "UNAUTHORIZED- user not logged in or not admin"
+					}
+				}
+			}
+		},
 
-    "get": {
-      "tags": [
-        "admin"
-      ],
-      "summary": "creates a new product",
-      "description": "",
-      "produces": [
-        "application/json"
-      ],
-      "parameters": [
-        {
-          "name": "body",
-          "in": "body",
-          "description": "the product who's inventory will be returned",
-          "required": true,
-          "type": "object",
-          "properties": {
-            "product_id": {
-              "type": "number"
-            }
-          }
-        }
-      ],
-      "responses": {
-        "200": {
-          "description": "SUCCESS"
-        },
-        "400": {
-          "description": "BAD REQUEST- request body didn't match schema or product id didn't exist"
-        },
-        "409": {
-          "description": "UNAUTHORIZED- user not logged in or not admin"
-        }
-      }
-    },
+		"/webhook": {
+			"post": {
+				"tags": ["webhook"],
+				"summary": "a protected route only accessible by stripe",
+				"description": "",
+				"produces": ["application/json"]
+			}
+		}
+	},
 
-    "put": {
-      "tags": [
-        "admin"
-      ],
-      "summary": "updates an existing product",
-      "description": "",
-      "produces": [
-        "application/json"
-      ],
-      "parameters": [
-        {
-          "name": "body",
-          "in": "body",
-          "description": "the product that who's inventory will be updated",
-          "required": true,
-          "type": "object",
-          "properties": {
-            "product_id": {
-              "type": "number"
-            },
-            "quantity": {
-              "type": "number"
-            }
-          }
-        }
-      ],
-      "responses": {
-        "200": {
-          "description": "SUCCESS- inventory updated"
-        },
-        "400": {
-          "description": "BAD REQUEST- request body didn't match schema or product id didn't exist"
-        },
-        "409": {
-          "description": "UNAUTHORIZED- user not logged in or not admin"
-        }
-      }
-    }
-  },
+	"securityDefinitions": {},
 
-  "/webhook": {
+	"definitions": {
+		"Product": {
+			"type": "object",
+			"properties": {
+				"id": {
+					"type": "integer"
+				},
+				"name": {
+					"type": "string"
+				},
+				"department": {
+					"type": "string"
+				},
+				"descr": {
+					"type": "stirng"
+				},
+				"price": {
+					"type": "string",
+					"format": "date-time"
+				},
+				"image_url": {
+					"type": "string"
+				},
+				"image_alt": {
+					"type": "string"
+				}
+			}
+		},
 
-    "post": {
-      "tags": [
-        "webhook"
-      ],
-      "summary": "a protected route only accessible by stripe",
-      "description": "",
-      "produces": [
-        "application/json"
-      ]
-    }
-  },
+		"CartItem": {
+			"type": "object",
+			"properties": {
+				"id": {
+					"type": "integer"
+				},
+				"product_id": {
+					"type": "integer"
+				},
+				"name": {
+					"type": "string"
+				},
+				"department": {
+					"type": "string"
+				},
+				"descr": {
+					"type": "stirng"
+				},
+				"price": {
+					"type": "string",
+					"format": "date-time"
+				},
+				"image_url": {
+					"type": "string"
+				},
+				"image_alt": {
+					"type": "string"
+				},
+				"quantity": {
+					"type": "integer"
+				}
+			}
+		},
 
-  "securityDefinitions": {
-   
-  },
+		"Category": {
+			"type": "object",
+			"properties": {
+				"id": {
+					"type": "integer"
+				},
+				"name": {
+					"type": "string"
+				},
+				"descr": {
+					"type": "string"
+				}
+			}
+		},
 
-  "definitions": {
-    "ApiResponse": {
-      "type": "object",
-      "properties": {
-        "sent": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "data": {
-          "type": "object"
-        },
-        "error": {
-          "type": "object"
-        }
-      }
-    }
-  }
-}
+		"Inventory": {
+			"type": "object",
+			"properties": {
+				"id": {
+					"type": "integer"
+				},
+				"product_id": {
+					"type": "integer"
+				},
+				"quantity": {
+					"type": "integer"
+				}
+			}
+		}
+	}
 }
