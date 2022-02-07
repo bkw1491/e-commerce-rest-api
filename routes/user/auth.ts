@@ -7,13 +7,11 @@ import { UserSchema } from "@schemas/user";
 import { issue } from "@utils/token";
 import { cookie } from "@utils/cookie";
 import { toResponse } from "@utils/response";
-import { verifyJWT } from "@middlewares/verify";
-import { JsonWebTokenError } from "jsonwebtoken";
 
 export const authRouter = express.Router();
 
 authRouter.post(
-	"/login",
+	"/",
 	validate(UserSchema.auth, "body"),
 	asyncHandler(async (req: Request, res: Response) => {
 		//creates a jwt
@@ -21,15 +19,5 @@ authRouter.post(
 		//set cookie on client
 		res.cookie("auth", token, cookie);
 		res.status(200).send(toResponse("auth success"));
-	})
-);
-
-authRouter.post(
-	"/logout",
-	verifyJWT("user"),
-	asyncHandler(async (req: Request, res: Response) => {
-		//remove the cookie to logout if it exists
-		req.cookies.set("auth", { expires: Date.now() });
-		res.status(200).send(toResponse("logout success"));
 	})
 );
